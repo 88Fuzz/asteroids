@@ -2,67 +2,67 @@ package com.butt.ast;
 
 public class BaseClass
 {
-	private int x;
-	private int y;
-	private int vx;
-	private int vy;
-	private int g;
+	protected float x;
+	protected float y;
+	protected float vx;
+	protected float vy;
+	protected float g;
 	
-	public int get_x()
+	public float get_x()
 	{
 		return this.x;
 	}
 	
-	public int get_y()
+	public float get_y()
 	{
 		return this.y;
 	}
 	
-	public void set_x(int val)
+	public void set_x(float val)
 	{
 		this.x=val;
 	}
 	
-	public void set_y(int val)
+	public void set_y(float val)
 	{
 		this.y=val;
 	}
 	
-	public int get_vx()
+	public float get_vx()
 	{
 		return this.vx;
 	}
 	
-	public int get_vy()
+	public float get_vy()
 	{
 		return this.vy;
 	}
 	
-	public void set_vx(int val)
+	public void set_vx(float val)
 	{
 		this.vx=val;
 	}
 	
-	public void set_vy(int val)
+	public void set_vy(float val)
 	{
 		this.vy=val;
 	}
 	
-	public int get_g()
+	public float get_g()
 	{
 		return this.g;
 	}
 	
-	public int set_g(int val)
+	public float set_g(float val)
 	{
 		return this.g=val;
 	}
 	
-	public void updateLoc()
+	public void updateLoc(long deltaT)
 	{//TODO SCREEN WRAP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		//TODO figure out best way to have gravity enabled!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		//TODO	maybe overload this function if it should not be affected by gravity
-		this.x=this.x+this.vx;//+g_gravity;
-		this.y=this.y+this.vy;//+g_gravity;
+		this.x+=this.vx*deltaT;//+g_gravity;
+		this.y+=this.vy*deltaT;//+g_gravity;
 	}
 }
