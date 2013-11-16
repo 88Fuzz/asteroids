@@ -9,7 +9,7 @@ public class Globals
 	public static boolean g_gravityObj;
 	public static boolean g_gravityShow;
 	
-	public static final String shipImg="ship.png";
+	public static final String shipImg="images/ship.png";
 	
 	Globals()
 	{

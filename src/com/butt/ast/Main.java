@@ -20,7 +20,7 @@ public class Main extends GameWindow implements KeyListener
 	public void init()
 	{
 		super.init();
-		player1=new Sprite("test.jpg");//Globals.shipImg);
+		player1=new Sprite(Globals.shipImg);
 		Window window=device.getFullScreenWindow();
 		window.setFocusTraversalKeysEnabled(false);
 		window.addKeyListener(this);
