@@ -4,7 +4,9 @@ public class BaseClass
 {
 	protected float x;
 	protected float y;
+	//x velocity, pixels per millimeter
 	protected float vx;
+	//y velocity, pixels per millimeter
 	protected float vy;
 	protected float g;
 	

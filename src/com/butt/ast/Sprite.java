@@ -6,13 +6,12 @@ import javax.swing.ImageIcon;
 
 public class Sprite extends BaseClass
 {
-	private Image img;
+	protected Image img;
 	
 	public Sprite(String imgLoc)
 	{
+		super();
 		img=loadImage(imgLoc);
-		x=100;
-		y=100;
 	}
 	
 	private Image loadImage(String fileName)

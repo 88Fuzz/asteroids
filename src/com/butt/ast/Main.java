@@ -4,26 +4,57 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.Window;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
-public class Main extends GameWindow implements KeyListener
+public class Main extends GameWindow// implements KeyListener
 {
 	public static void main(String[] args)
 	{
 		new Main().run();
 	}
 	
-	private static final long DEMO_TIME = 50;
-	private boolean play=true;
-	private Sprite player1;
+	private Player player1;//will probably need to extend this class into a play class
+	private InputManager inMan;
+	private GameAction p1Thrust;
+	private GameAction p1RotateL;
+	private GameAction p1RotateR;
+	private GameAction p1Shoot;
 	
 	public void init()
 	{
 		super.init();
-		player1=new Sprite(Globals.shipImg);
 		Window window=device.getFullScreenWindow();
 		window.setFocusTraversalKeysEnabled(false);
-		window.addKeyListener(this);
+		try changing this thing to match a bunch of set resolutions;
+		System.out.print("width: "+window.getWidth()+"\n");
+		System.out.print("height: "+window.getHeight()+"\n");
+		inMan=new InputManager(window);
+		createSprites();
+		createGameActions();
+		//window.addKeyListener(this);
+	}
+	
+	private void createSprites()
+	{
+		player1=new Player(Globals.shipImg);
+	}
+	
+	private void createGameActions()
+	{
+		p1Thrust=new GameAction("thrust");
+		p1RotateL=new GameAction("rotate left");
+		p1RotateR=new GameAction("rotate right");
+		p1Shoot=new GameAction("shoot");
+		
+		if(p1Thrust==null)
+			System.out.print("nulls\n");
+		if(inMan==null)
+			System.out.print("nullzies\n");
+		
+		inMan.mapActToKey(p1Thrust, KeyEvent.VK_W);
+		inMan.mapActToKey(p1RotateL, KeyEvent.VK_A);
+		inMan.mapActToKey(p1RotateR, KeyEvent.VK_D);
+		inMan.mapActToKey(p1Shoot, KeyEvent.VK_SPACE);
+		
 	}
 	
 	public void run()
@@ -62,21 +93,17 @@ public class Main extends GameWindow implements KeyListener
 		}*/
 	}
 	
-	
-	
-	public void keyPressed(KeyEvent e)
-	{
-		int keyCode=e.getKeyCode();
-		
-		if(keyCode==KeyEvent.VK_ESCAPE)
-			play=false;
-		
-		e.consume();
-	}
 	public void gameLoop()
 	{
-		while(play)
+		long currTime=System.currentTimeMillis();
+		long elapsedTime;
+		while(Globals.g_play)
 		{
+			elapsedTime=System.currentTimeMillis()-currTime;
+			currTime+=elapsedTime;
+			
+			updateGraphicsPos(elapsedTime);
+			
 			Graphics2D g=getGraphics();
 			draw(g);
 			g.dispose();
@@ -98,29 +125,27 @@ public class Main extends GameWindow implements KeyListener
 		g.fillRect(0, 0, Globals.WIDTH, Globals.HEIGHT);
 		g.setColor(window.getForeground());
 		
-		g.drawImage(player1.getImage(), 277,107,null);//Math.round(player1.get_x()), Math.round(player1.get_y()), null);
+		g.drawImage(player1.getImage(), Math.round(player1.get_x()),Math.round(player1.get_y()),null);//Math.round(player1.get_x()), Math.round(player1.get_y()), null);
 		g.drawString("HELLO THERE\n", 20, 50);
 	}
-
-	@Override
-	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
 	
-	public void LoadPlayers()
+	public void updateGraphicsPos(long diff)
 	{
-		
-	}
-	
-	public void update(long val)
-	{
-		
+		if(p1Thrust.isPressed())
+		{
+			player1.thrust(diff);
+		}
+		if(p1RotateL.isPressed())
+		{
+			player1.rotate(diff, Player.LEFT);
+		}
+		if(p1RotateR.isPressed())
+		{
+			player1.rotate(diff, Player.RIGHT);
+		}
+		if(p1Shoot.isPressed())
+		{
+			player1.shoot(diff);
+		}
 	}
 }
