@@ -35,15 +35,21 @@ public abstract class GameWindow extends JFrame
 		
 		device.setFullScreenWindow(frame);
 		
-		if(displayMode!=null && device.isDisplayChangeSupported())
+		System.out.print("IN HERE width: "+frame.getWidth()+"\n");
+		System.out.print("IN HERE height: "+frame.getHeight()+"\n");
+		
+		Globals.WIDTH=frame.getWidth();
+		Globals.HEIGHT=frame.getHeight();
+		
+		/*if(displayMode!=null && device.isDisplayChangeSupported())
 		{
 			try
 			{
 				device.setDisplayMode(displayMode);
 			}
-			catch (IllegalArgumentException ex) { }
-			frame.setSize(displayMode.getWidth(), displayMode.getHeight());
-		}
+			catch (IllegalArgumentException ex) {System.out.print("EXCEPTION\n"); }
+			//frame.setSize(displayMode.getWidth(), displayMode.getHeight());
+		}*/
 		
 		try
 		{

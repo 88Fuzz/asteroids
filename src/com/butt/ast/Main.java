@@ -4,6 +4,9 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.Window;
 import java.awt.event.KeyEvent;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
+import java.awt.image.BufferedImageOp;
 
 public class Main extends GameWindow// implements KeyListener
 {
@@ -24,9 +27,15 @@ public class Main extends GameWindow// implements KeyListener
 		super.init();
 		Window window=device.getFullScreenWindow();
 		window.setFocusTraversalKeysEnabled(false);
-		try changing this thing to match a bunch of set resolutions;
+		//try changing this thing to match a bunch of set resolutions;
+		
+		
+		
 		System.out.print("width: "+window.getWidth()+"\n");
 		System.out.print("height: "+window.getHeight()+"\n");
+		
+		
+		
 		inMan=new InputManager(window);
 		createSprites();
 		createGameActions();
@@ -35,7 +44,7 @@ public class Main extends GameWindow// implements KeyListener
 	
 	private void createSprites()
 	{
-		player1=new Player(Globals.shipImg);
+		player1=new Player(Globals.p1Img);
 	}
 	
 	private void createGameActions()
@@ -125,7 +134,32 @@ public class Main extends GameWindow// implements KeyListener
 		g.fillRect(0, 0, Globals.WIDTH, Globals.HEIGHT);
 		g.setColor(window.getForeground());
 		
-		g.drawImage(player1.getImage(), Math.round(player1.get_x()),Math.round(player1.get_y()),null);//Math.round(player1.get_x()), Math.round(player1.get_y()), null);
+		BufferedImageOp ops = null;//createImageOp();
+		
+		
+		AffineTransform tx=AffineTransform.getRotateInstance(Math.toRadians(player1.getRotate()), player1.getWidth()/2, player1.getHeight()/2);
+		AffineTransformOp op=new AffineTransformOp(tx,AffineTransformOp.TYPE_BILINEAR);
+		
+		//g.rotate(player1.getRotate());
+		g.drawImage(op.filter(player1.getImage(), null), ops, (int)Math.round(player1.get_x()), (int)Math.round(player1.get_y()));
+		
+		//g.drawImage((Image)op.filter(player1.getImage(),null), 
+		//		(long)Math.round(player1.get_x()),
+		//		(long)Math.round(player1.get_y()),
+		//		null);//Math.round(player1.get_x()), Math.round(player1.get_y()), null);
+		
+		
+		
+		
+		
+		//g.rotate(-player1.getRotate());
+		
+		
+		
+		
+		//g.drawImage(op.filter(player1.getImage(), null), Math.round(player1.get_x()), Math.round(player1.get_y()), null);
+		
+		
 		g.drawString("HELLO THERE\n", 20, 50);
 	}
 	
@@ -147,5 +181,6 @@ public class Main extends GameWindow// implements KeyListener
 		{
 			player1.shoot(diff);
 		}
+		player1.checkEdges();
 	}
 }
