@@ -9,6 +9,8 @@ public class BaseClass
 	//y velocity, pixels per millimeter
 	protected double vy;
 	protected double g;
+	protected double rotate;
+	protected double vRotate;
 	
 	public double get_x()
 	{
@@ -71,6 +73,17 @@ public class BaseClass
 			y=Globals.HEIGHT;
 		else if(y>Globals.HEIGHT)
 			y=0;
+		
+		if(rotate>360)
+			rotate=0;
+		else if(rotate<-360)
+			rotate=0;
+	}
+	
+	public void updatePos()
+	{
+		x+=vx;
+		y+=vy;
 	}
 	
 /*	public void updateLoc(long deltaT)

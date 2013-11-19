@@ -15,7 +15,7 @@ public class Main extends GameWindow// implements KeyListener
 		new Main().run();
 	}
 	
-	private Player player1;//will probably need to extend this class into a play class
+	private Player player1;
 	private InputManager inMan;
 	private GameAction p1Thrust;
 	private GameAction p1RotateL;
@@ -45,6 +45,8 @@ public class Main extends GameWindow// implements KeyListener
 	private void createSprites()
 	{
 		player1=new Player(Globals.p1Img);
+		player1.set_x(Globals.WIDTH/2);
+		player1.set_y(Globals.HEIGHT/2);
 	}
 	
 	private void createGameActions()
@@ -167,8 +169,13 @@ public class Main extends GameWindow// implements KeyListener
 	{
 		if(p1Thrust.isPressed())
 		{
-			player1.thrust(diff);
+			player1.thrustOn(diff);
 		}
+		else
+		{
+			player1.thrustOff(diff);
+		}
+		
 		if(p1RotateL.isPressed())
 		{
 			player1.rotate(diff, Player.LEFT);
@@ -181,6 +188,7 @@ public class Main extends GameWindow// implements KeyListener
 		{
 			player1.shoot(diff);
 		}
+		player1.updatePos();
 		player1.checkEdges();
 	}
 }
