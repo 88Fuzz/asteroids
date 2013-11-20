@@ -72,39 +72,11 @@ public class Player extends Sprite
 	//shoots a bullet from the ship
 	public void shoot(long diff)
 	{
-		//b1=new Bullet(Globals.p1Bullet, vx, vy);
-		//b1.set_x(x+Math.sin(Math.toRadians(rotate)));
-		//b1.set_y(y+-Math.cos(Math.toRadians(rotate)));
 		b1.set_x(x+img.getWidth()/2);
 		b1.set_y(y+img.getHeight()/2);
 		
-		System.out.print("angle: "+rotate+"\n");
 		b1.set_vx((Globals.g_bulletMaxSpeed+vVelocity)*Math.sin(Math.toRadians(rotate)));
 		b1.set_vy((Globals.g_bulletMaxSpeed+vVelocity)*-Math.cos(Math.toRadians(rotate)));
-		
-		System.out.print("vx: "+(Globals.g_bulletMaxSpeed+vVelocity)*Math.sin(Math.toRadians(rotate))+"\n");
-		System.out.print("vy: "+(Globals.g_bulletMaxSpeed+vVelocity)*-Math.cos(Math.toRadians(rotate))+"\n");
-		
-		
-		//System.out.println("vx: "+vx);
-		//System.out.println("vxb: "+Math.sin(Math.toRadians(rotate)*Globals.g_bulletMaxSpeed));
-		//System.out.println("vxb: "+vx/Globals.g_player1maxSpeed*Globals.g_bulletMaxSpeed);
-		
-		//System.out.println("vy: "+vy);
-		//System.out.println("vyb: "+-Math.cos(Math.toRadians(rotate)*Globals.g_bulletMaxSpeed));
-		//System.out.println("vyb: "+vy/Globals.g_player1maxSpeed*Globals.g_bulletMaxSpeed);
-		
-		//b1.set_vx(vx/Globals.g_player1maxSpeed*Globals.g_bulletMaxSpeed);
-		//b1.set_vy(vy/Globals.g_player1maxSpeed*Globals.g_bulletMaxSpeed);
-		//if(vx<0)
-		//	b1.set_vx(Math.cos(Math.toRadians(rotate)*Globals.g_bulletMaxSpeed));
-		//else
-		//	b1.set_vx(Math.cos(Math.toRadians(rotate)*Globals.g_bulletMaxSpeed));
-		
-		//if(vy<0)
-		//	b1.set_vy(-Math.sin(Math.toRadians(rotate)*Globals.g_bulletMaxSpeed));
-		//else
-		//	b1.set_vy(-Math.sin(Math.toRadians(rotate)*Globals.g_bulletMaxSpeed));
 	}
 	
 	public void checkEdges()
