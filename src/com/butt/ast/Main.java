@@ -58,12 +58,12 @@ public class Main extends GameWindow// implements KeyListener
 		p1Thrust=new GameAction("thrust");
 		p1RotateL=new GameAction("rotate left");
 		p1RotateR=new GameAction("rotate right");
-		p1Shoot=new GameAction("shoot");
+		p1Shoot=new GameAction("shoot", GameAction.DETECT_INITIAL_ONLY);
 		
 		p2Thrust=new GameAction("thrust");
 		p2RotateL=new GameAction("rotate left");
 		p2RotateR=new GameAction("rotate right");
-		p2Shoot=new GameAction("shoot");
+		p2Shoot=new GameAction("shoot", GameAction.DETECT_INITIAL_ONLY);
 		
 		
 		inMan.mapActToKey(p1Thrust, KeyEvent.VK_W);
@@ -133,8 +133,8 @@ public class Main extends GameWindow// implements KeyListener
 		g.setColor(window.getBackground());
 		g.fillRect(0, 0, Globals.WIDTH, Globals.HEIGHT);
 		g.setColor(window.getForeground());
-		
 		BufferedImageOp ops = null;
+		Bullet b1;
 		
 		
 		AffineTransform tx=AffineTransform.getRotateInstance(Math.toRadians(player1.getRotate()), player1.getWidth()/2, player1.getHeight()/2);
@@ -146,6 +146,9 @@ public class Main extends GameWindow// implements KeyListener
 		op=new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);//maybe change this to something that doesn't use new
 		g.drawImage(op.filter(player2.getImage(), null), ops, (int)Math.round(player2.get_x()), (int)Math.round(player2.get_y()));
 		
+		b1=player1.getBullet();
+		
+		g.drawImage(b1.getImage(), ops, (int)b1.get_x(), (int)b1.get_y());
 		
 		g.drawString("HELLO THERE\n", 20, 50);
 	}

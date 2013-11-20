@@ -19,6 +19,10 @@ public class Globals
 	public static final String p2Img="images/player2.png";
 	public static final String bigAst="images/bigAsteroid.png";
 	public static final String smallAst="images/smallAsteroid.png";
+	public static final String p1Bullet="images/player1Bullet.png";
+	public static final String p2Bullet="images/player2Bullet.png";
+	
+	public static final double g_bulletMaxSpeed=8;
 	public static final double g_player1maxSpeed=5;
 	public static final double g_playervRotate=.25;
 	public static final double g_playervVelocity=.8;
