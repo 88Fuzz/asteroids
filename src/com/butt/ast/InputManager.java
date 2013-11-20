@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+//class that listens for keyboard input
 public class InputManager implements KeyListener
 {
 	//about 600 key codes
@@ -11,6 +12,7 @@ public class InputManager implements KeyListener
 	private GameAction[] keyActs=new GameAction[NUM_KEY_CODES];
 	private Component comp;
 	
+	//initializes all keyboard keys to point to no game action
 	public InputManager(Component comp)
 	{
 		this.comp=comp;
@@ -25,11 +27,13 @@ public class InputManager implements KeyListener
 		comp.setFocusTraversalKeysEnabled(false);
 	}
 	
+	//maps the new game action to the list of keyboard key codes
 	public void mapActToKey(GameAction ga, int keyCode)
 	{
 		keyActs[keyCode]=ga;
 	}
 	
+	//returns a game action to the keyboard keycode passed
 	private GameAction getKeyAction(int keyCode)
 	{
 		if(keyCode<NUM_KEY_CODES)
@@ -37,11 +41,12 @@ public class InputManager implements KeyListener
 		return null;
 	}
 	
+	//override function, is called when a key is pressed
 	public void keyPressed(KeyEvent e)
 	{
 		int keyCode=e.getKeyCode();
 		if(keyCode==KeyEvent.VK_ESCAPE)
-			Globals.g_play=false;
+			Globals.g_play=Globals.KILL;
 		
 		GameAction ga=getKeyAction(keyCode);
 		if(ga!=null)
@@ -51,6 +56,7 @@ public class InputManager implements KeyListener
 		e.consume();
 	}
 	
+	//override function, is called when a key is released
 	public void keyReleased(KeyEvent e)
 	{
 		GameAction ga=getKeyAction(e.getKeyCode());
@@ -61,6 +67,7 @@ public class InputManager implements KeyListener
 		e.consume();
 	}
 	
+	//override function, is called I have no idea when
 	public void keyTyped(KeyEvent e)
 	{
 		e.consume();

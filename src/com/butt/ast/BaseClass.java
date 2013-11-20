@@ -1,5 +1,7 @@
 package com.butt.ast;
 
+
+//Base class that will be the super class of all objects that move
 public class BaseClass
 {
 	protected double x;

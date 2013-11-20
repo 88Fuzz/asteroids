@@ -8,6 +8,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImageOp;
 
+//initializes everything and stuff
 public class Main extends GameWindow// implements KeyListener
 {
 	public static void main(String[] args)
@@ -15,6 +16,7 @@ public class Main extends GameWindow// implements KeyListener
 		new Main().run();
 	}
 	
+	//player 1 and 2 classes
 	private Player player1;
 	private Player player2;
 	private InputManager inMan;
@@ -32,19 +34,11 @@ public class Main extends GameWindow// implements KeyListener
 		super.init();
 		Window window=device.getFullScreenWindow();
 		window.setFocusTraversalKeysEnabled(false);
-		//try changing this thing to match a bunch of set resolutions;
-		
-		
-		
-		System.out.print("width: "+window.getWidth()+"\n");
-		System.out.print("height: "+window.getHeight()+"\n");
-		
-		
-		
+
+
 		inMan=new InputManager(window);
 		createSprites();
 		createGameActions();
-		//window.addKeyListener(this);
 	}
 	
 	private void createSprites()
@@ -58,6 +52,7 @@ public class Main extends GameWindow// implements KeyListener
 		player2.set_y(Globals.HEIGHT/4);
 	}
 	
+	//initializes keyboard inputs for the game actions
 	private void createGameActions()
 	{
 		p1Thrust=new GameAction("thrust");
@@ -70,10 +65,6 @@ public class Main extends GameWindow// implements KeyListener
 		p2RotateR=new GameAction("rotate right");
 		p2Shoot=new GameAction("shoot");
 		
-		if(p1Thrust==null)
-			System.out.print("nulls\n");
-		if(inMan==null)
-			System.out.print("nullzies\n");
 		
 		inMan.mapActToKey(p1Thrust, KeyEvent.VK_W);
 		inMan.mapActToKey(p1RotateL, KeyEvent.VK_A);
@@ -87,6 +78,7 @@ public class Main extends GameWindow// implements KeyListener
 		
 	}
 	
+	//main runloop
 	public void run()
 	{
 		try
@@ -98,55 +90,42 @@ public class Main extends GameWindow// implements KeyListener
 		{
 			restoreScreen();
 		}
-		/*setBackground(Color.black);
-		setForeground(Color.white);
-		setFont(new Font("Dialog",0,24));
-		SimpleScreenManager screen = new SimpleScreenManager();
-		
-		screen.setFullScreen(displayMode, this);
-		
-		while(play)
-		{
-		}
-		try
-		{
-			
-			try
-			{
-				Thread.sleep(DEMO_TIME);
-			}
-			catch (InterruptedException ex) { }
-		}
-		finally
-		{
-		screen.restoreScreen();
-		}*/
 	}
 	
+	//game logic
 	public void gameLoop()
 	{
 		long currTime=System.currentTimeMillis();
 		long elapsedTime;
-		while(Globals.g_play)
+		while(Globals.g_play>0)
 		{
-			elapsedTime=System.currentTimeMillis()-currTime;
-			currTime+=elapsedTime;
-			
-			updateGraphicsPos(elapsedTime);
-			
-			Graphics2D g=getGraphics();
-			draw(g);
-			g.dispose();
-			update();
-			
-			try
+			//Game is not paused
+			if(Globals.g_play==Globals.PLAY)
 			{
-				Thread.sleep(20);
+				elapsedTime=System.currentTimeMillis()-currTime;
+				currTime+=elapsedTime;
+			
+				updateGraphicsPos(elapsedTime);
+			
+				Graphics2D g=getGraphics();
+				draw(g);
+				g.dispose();
+				update();
+			
+				try
+				{
+					Thread.sleep(20);
+				}
+				catch (InterruptedException ex) { }
 			}
-			catch (InterruptedException ex) { }
+			else//game is paused
+			{
+				
+			}
 		}
 	}
 	
+	//draws the images on screen
 	public synchronized void draw(Graphics2D g)
 	{
 		Window window=device.getFullScreenWindow();
@@ -155,39 +134,23 @@ public class Main extends GameWindow// implements KeyListener
 		g.fillRect(0, 0, Globals.WIDTH, Globals.HEIGHT);
 		g.setColor(window.getForeground());
 		
-		BufferedImageOp ops = null;//createImageOp();
+		BufferedImageOp ops = null;
 		
 		
 		AffineTransform tx=AffineTransform.getRotateInstance(Math.toRadians(player1.getRotate()), player1.getWidth()/2, player1.getHeight()/2);
 		AffineTransformOp op=new AffineTransformOp(tx,AffineTransformOp.TYPE_BILINEAR);
 		
-		//g.rotate(player1.getRotate());
 		g.drawImage(op.filter(player1.getImage(), null), ops, (int)Math.round(player1.get_x()), (int)Math.round(player1.get_y()));
 		
 		tx=AffineTransform.getRotateInstance(Math.toRadians(player2.getRotate()), player2.getWidth()/2, player2.getHeight()/2);
 		op=new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);//maybe change this to something that doesn't use new
 		g.drawImage(op.filter(player2.getImage(), null), ops, (int)Math.round(player2.get_x()), (int)Math.round(player2.get_y()));
 		
-		//g.drawImage((Image)op.filter(player1.getImage(),null), 
-		//		(long)Math.round(player1.get_x()),
-		//		(long)Math.round(player1.get_y()),
-		//		null);//Math.round(player1.get_x()), Math.round(player1.get_y()), null);
-		
-		
-		
-		
-		
-		//g.rotate(-player1.getRotate());
-		
-		
-		
-		
-		//g.drawImage(op.filter(player1.getImage(), null), Math.round(player1.get_x()), Math.round(player1.get_y()), null);
-		
 		
 		g.drawString("HELLO THERE\n", 20, 50);
 	}
 	
+	//checks if keys are pressed and takes the actions if keys are pressed
 	public void updateGraphicsPos(long diff)
 	{
 		if(p1Thrust.isPressed())

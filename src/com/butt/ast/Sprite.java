@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+//An object that is drawn on screen
 public class Sprite extends BaseClass
 {
 	protected BufferedImage img;
@@ -19,7 +20,6 @@ public class Sprite extends BaseClass
 	
 	private void loadImage(String fileName)
 	{
-		//return new ImageIcon(fileName).getImage();
 		try
 		{
 			img=ImageIO.read(new File(fileName));

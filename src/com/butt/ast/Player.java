@@ -1,36 +1,28 @@
 package com.butt.ast;
 
+//contains the player's ship
 public class Player extends Sprite
 {
 	public static final boolean LEFT=false;
 	public static final boolean RIGHT=true;
-	
-	//private double rotate;
-	//private double velocity;
-	//private double vRotate;
 	private double vVelocity;
 	private double friction;
 	
 	public Player(String imgLoc)
 	{
 		super(imgLoc);
-		
-		
-		
 		vRotate=Globals.g_playervRotate;
 		vVelocity=Globals.g_playervVelocity;
 		friction=Globals.g_playerFriction;
-		//vx=(float) .25;
-		//vy=(float) .25;
 	}
 	
+	//player is accelerating
 	public void thrustOn(long diff)
-	{
-		//velocity+=vVelocity*diff-friction*diff;
-		
+	{		
 		vx+=vVelocity*Math.sin(Math.toRadians(rotate));
 		vy+=-vVelocity*Math.cos(Math.toRadians(rotate));
 		
+		//check speedlimit of ship
 		if(vx>Globals.g_player1maxSpeed)
 			vx=Globals.g_player1maxSpeed;
 		else if(vx<-Globals.g_player1maxSpeed)
@@ -40,13 +32,9 @@ public class Player extends Sprite
 			vy=Globals.g_player1maxSpeed;
 		else if(vy<-Globals.g_player1maxSpeed)
 			vy=-Globals.g_player1maxSpeed;
-		
-		
-		
-		//y+=vy;
-		//x+=vx;
 	}
 	
+	//activates the friction force to eventually slow down the ship
 	public void thrustOff(long diff)
 	{
 		if(vx<0)
@@ -58,35 +46,9 @@ public class Player extends Sprite
 			vy+=diff*friction;
 		else
 			vy-=diff*friction;
-		
-		//velocity-=friction*diff;
-		/*vx-=friction*diff;
-		vy-=friction*diff;
-		System.out.println("vx: "+vx);
-		System.out.println("vy: "+vy);
-		
-		if(vx<-Globals.g_player1maxSpeed)
-			vx=-Globals.g_player1maxSpeed;
-		
-		if(vy<-Globals.g_player1maxSpeed)
-			vy=-Globals.g_player1maxSpeed;
-		*/
-		//if(vx<0)
-		//	vx=0;
-		//if(vy<0)
-		//	vy=0;
-		
-		//if(velocity>Globals.g_player1maxSpeed)
-		//	velocity=Globals.g_player1maxSpeed;
-		
-		//if(velocity<0)
-		//	velocity=0;
-		
-		
-		//vx=velocity*Math.sin(Math.toRadians(rotate));
-		//vy=-velocity*Math.cos(Math.toRadians(rotate));
 	}
 	
+	//rotates the ship left or right
 	public void rotate(long diff, boolean dir)
 	{
 		if(dir==LEFT)
@@ -100,6 +62,7 @@ public class Player extends Sprite
 		return rotate;
 	}
 	
+	//shoots a bullet from the ship
 	public void shoot(long diff)
 	{
 		

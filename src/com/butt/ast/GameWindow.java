@@ -14,10 +14,10 @@ import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.JFrame;
 
+//creates the game window
 public abstract class GameWindow extends JFrame
 {
 	protected static final DisplayMode displayMode=new DisplayMode(Globals.WIDTH,Globals.HEIGHT,16,DisplayMode.REFRESH_RATE_UNKNOWN);
-	//protected static SimpleScreenManager screen = new SimpleScreenManager();
 	final JFrame frame=new JFrame();
 	protected boolean play;
 	protected GraphicsDevice device;
@@ -41,15 +41,6 @@ public abstract class GameWindow extends JFrame
 		Globals.WIDTH=frame.getWidth();
 		Globals.HEIGHT=frame.getHeight();
 		
-		/*if(displayMode!=null && device.isDisplayChangeSupported())
-		{
-			try
-			{
-				device.setDisplayMode(displayMode);
-			}
-			catch (IllegalArgumentException ex) {System.out.print("EXCEPTION\n"); }
-			//frame.setSize(displayMode.getWidth(), displayMode.getHeight());
-		}*/
 		
 		try
 		{
@@ -60,16 +51,11 @@ public abstract class GameWindow extends JFrame
 		catch (InterruptedException ex) {}
 		catch (InvocationTargetException ex) {}
 		
-		//device.setDisplayMode(displayMode);
-		//may not need, supposed fix for osx
-		//frame.setSize(displayMode.getWidth(), displayMode.getHeight());
 		
 		Window window=device.getFullScreenWindow();
 		window.setFont(new Font("Dialog", 0, 24));
 		window.setBackground(Color.black);
 		window.setForeground(Color.white);
-		//setFont(new Font("Dialog",0,24));
-		//screen.setFullScreen(displayMode, this);
 		play=true;
 	}
 	
