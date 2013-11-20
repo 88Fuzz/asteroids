@@ -133,22 +133,9 @@ public class Main extends GameWindow// implements KeyListener
 		g.setColor(window.getBackground());
 		g.fillRect(0, 0, Globals.WIDTH, Globals.HEIGHT);
 		g.setColor(window.getForeground());
-		BufferedImageOp ops = null;
-		Bullet b1;
-		
-		
-		AffineTransform tx=AffineTransform.getRotateInstance(Math.toRadians(player1.getRotate()), player1.getWidth()/2, player1.getHeight()/2);
-		AffineTransformOp op=new AffineTransformOp(tx,AffineTransformOp.TYPE_BILINEAR);
-		
-		g.drawImage(op.filter(player1.getImage(), null), ops, (int)Math.round(player1.get_x()), (int)Math.round(player1.get_y()));
-		
-		tx=AffineTransform.getRotateInstance(Math.toRadians(player2.getRotate()), player2.getWidth()/2, player2.getHeight()/2);
-		op=new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);//maybe change this to something that doesn't use new
-		g.drawImage(op.filter(player2.getImage(), null), ops, (int)Math.round(player2.get_x()), (int)Math.round(player2.get_y()));
-		
-		b1=player1.getBullet();
-		
-		g.drawImage(b1.getImage(), ops, (int)b1.get_x(), (int)b1.get_y());
+
+		player1.draw(g);
+		player2.draw(g);
 		
 		g.drawString("HELLO THERE\n", 20, 50);
 	}
