@@ -6,7 +6,7 @@ public class Player extends Sprite
 	public static final boolean RIGHT=true;
 	
 	//private double rotate;
-	private double velocity;
+	//private double velocity;
 	//private double vRotate;
 	private double vVelocity;
 	private double friction;
@@ -17,21 +17,31 @@ public class Player extends Sprite
 		
 		
 		
-		vRotate=.25;
-		vVelocity=.004;
-		friction=.00004;
+		vRotate=Globals.g_playervRotate;
+		vVelocity=Globals.g_playervVelocity;
+		friction=Globals.g_playerFriction;
 		//vx=(float) .25;
 		//vy=(float) .25;
 	}
 	
 	public void thrustOn(long diff)
 	{
-		velocity+=vVelocity*diff-friction*diff;
-		if(velocity>Globals.g_player1maxSpeed)
-			velocity=Globals.g_player1maxSpeed;
+		//velocity+=vVelocity*diff-friction*diff;
 		
-		vx=velocity*Math.sin(Math.toRadians(rotate));
-		vy=-velocity*Math.cos(Math.toRadians(rotate));
+		vx+=vVelocity*Math.sin(Math.toRadians(rotate));
+		vy+=-vVelocity*Math.cos(Math.toRadians(rotate));
+		
+		if(vx>Globals.g_player1maxSpeed)
+			vx=Globals.g_player1maxSpeed;
+		else if(vx<-Globals.g_player1maxSpeed)
+			vx=-Globals.g_player1maxSpeed;
+		
+		if(vy>Globals.g_player1maxSpeed)
+			vy=Globals.g_player1maxSpeed;
+		else if(vy<-Globals.g_player1maxSpeed)
+			vy=-Globals.g_player1maxSpeed;
+		
+		
 		
 		//y+=vy;
 		//x+=vx;

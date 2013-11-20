@@ -15,6 +15,9 @@ public class Globals
 	public static final String bigAst="images/bigAsteroid.png";
 	public static final String smallAst="images/smallAsteroid.png";
 	public static final double g_player1maxSpeed=5;
+	public static final double g_playervRotate=.25;
+	public static final double g_playervVelocity=.8;
+	public static final double g_playerFriction=.00004;
 	
 	Globals()
 	{

@@ -16,11 +16,16 @@ public class Main extends GameWindow// implements KeyListener
 	}
 	
 	private Player player1;
+	private Player player2;
 	private InputManager inMan;
 	private GameAction p1Thrust;
+	private GameAction p2Thrust;
 	private GameAction p1RotateL;
+	private GameAction p2RotateL;
 	private GameAction p1RotateR;
+	private GameAction p2RotateR;
 	private GameAction p1Shoot;
+	private GameAction p2Shoot;
 	
 	public void init()
 	{
@@ -47,6 +52,10 @@ public class Main extends GameWindow// implements KeyListener
 		player1=new Player(Globals.p1Img);
 		player1.set_x(Globals.WIDTH/2);
 		player1.set_y(Globals.HEIGHT/2);
+		
+		player2=new Player(Globals.p2Img);
+		player2.set_x(Globals.WIDTH/4);
+		player2.set_y(Globals.HEIGHT/4);
 	}
 	
 	private void createGameActions()
@@ -55,6 +64,11 @@ public class Main extends GameWindow// implements KeyListener
 		p1RotateL=new GameAction("rotate left");
 		p1RotateR=new GameAction("rotate right");
 		p1Shoot=new GameAction("shoot");
+		
+		p2Thrust=new GameAction("thrust");
+		p2RotateL=new GameAction("rotate left");
+		p2RotateR=new GameAction("rotate right");
+		p2Shoot=new GameAction("shoot");
 		
 		if(p1Thrust==null)
 			System.out.print("nulls\n");
@@ -65,6 +79,11 @@ public class Main extends GameWindow// implements KeyListener
 		inMan.mapActToKey(p1RotateL, KeyEvent.VK_A);
 		inMan.mapActToKey(p1RotateR, KeyEvent.VK_D);
 		inMan.mapActToKey(p1Shoot, KeyEvent.VK_SPACE);
+		
+		inMan.mapActToKey(p2Thrust, KeyEvent.VK_UP);
+		inMan.mapActToKey(p2RotateL, KeyEvent.VK_LEFT);
+		inMan.mapActToKey(p2RotateR, KeyEvent.VK_RIGHT);
+		inMan.mapActToKey(p2Shoot, KeyEvent.VK_SLASH);
 		
 	}
 	
@@ -145,6 +164,10 @@ public class Main extends GameWindow// implements KeyListener
 		//g.rotate(player1.getRotate());
 		g.drawImage(op.filter(player1.getImage(), null), ops, (int)Math.round(player1.get_x()), (int)Math.round(player1.get_y()));
 		
+		tx=AffineTransform.getRotateInstance(Math.toRadians(player2.getRotate()), player2.getWidth()/2, player2.getHeight()/2);
+		op=new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);//maybe change this to something that doesn't use new
+		g.drawImage(op.filter(player2.getImage(), null), ops, (int)Math.round(player2.get_x()), (int)Math.round(player2.get_y()));
+		
 		//g.drawImage((Image)op.filter(player1.getImage(),null), 
 		//		(long)Math.round(player1.get_x()),
 		//		(long)Math.round(player1.get_y()),
@@ -168,27 +191,34 @@ public class Main extends GameWindow// implements KeyListener
 	public void updateGraphicsPos(long diff)
 	{
 		if(p1Thrust.isPressed())
-		{
 			player1.thrustOn(diff);
-		}
 		else
-		{
 			player1.thrustOff(diff);
-		}
 		
 		if(p1RotateL.isPressed())
-		{
 			player1.rotate(diff, Player.LEFT);
-		}
 		if(p1RotateR.isPressed())
-		{
 			player1.rotate(diff, Player.RIGHT);
-		}
 		if(p1Shoot.isPressed())
-		{
 			player1.shoot(diff);
-		}
+		
+		if(p2Thrust.isPressed())
+			player2.thrustOn(diff);
+		else
+			player2.thrustOff(diff);
+		
+		if(p2RotateL.isPressed())
+			player2.rotate(diff, Player.LEFT);
+		if(p2RotateR.isPressed())
+			player2.rotate(diff, Player.RIGHT);
+		if(p2Shoot.isPressed())
+			player2.shoot(diff);
+			
+			
 		player1.updatePos();
 		player1.checkEdges();
+		
+		player2.updatePos();
+		player2.checkEdges();
 	}
 }
