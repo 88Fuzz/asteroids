@@ -21,12 +21,14 @@ public class Globals
 	public static final String smallAst="images/smallAsteroid.png";
 	public static final String p1Bullet="images/player1Bullet.png";
 	public static final String p2Bullet="images/player2Bullet.png";
+	public static final String alienShip="images/alien.png";
+	public static final String alienBullet="images/alienBullet.png";
 	
-	public static final double g_bulletMaxSpeed=8;
-	public static final double g_player1maxSpeed=5;
-	public static final double g_playervRotate=.25;
-	public static final double g_playervVelocity=.8;
-	public static final double g_playerFriction=.00004;
+	//public static final double g_bulletMaxSpeed=8;
+	//public static final double g_player1maxSpeed=5;
+	//public static final double g_playervRotate=.25;
+	//public static final double g_playervVelocity=.8;
+	//public static final double g_playerFriction=.00004;
 	
 	Globals()
 	{

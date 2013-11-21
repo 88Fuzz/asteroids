@@ -29,6 +29,8 @@ public class Main extends GameWindow// implements KeyListener
 	private GameAction p1Shoot;
 	private GameAction p2Shoot;
 	
+	private Alien alien;//WILL NEED TO BE CHANGED
+	
 	public void init()
 	{
 		super.init();
@@ -43,13 +45,10 @@ public class Main extends GameWindow// implements KeyListener
 	
 	private void createSprites()
 	{
-		player1=new Player(Globals.p1Img);
-		player1.set_x(Globals.WIDTH/2);
-		player1.set_y(Globals.HEIGHT/2);
+		player1=new Player(Globals.p1Img, Globals.p1Bullet, (double)Globals.WIDTH/2, (double)Globals.HEIGHT/2);
+		player2=new Player(Globals.p2Img, Globals.p2Bullet, (double)Globals.WIDTH/4, (double)Globals.HEIGHT/4);
 		
-		player2=new Player(Globals.p2Img);
-		player2.set_x(Globals.WIDTH/4);
-		player2.set_y(Globals.HEIGHT/4);
+		alien= new Alien(Globals.alienShip, Globals.alienBullet, (double)Globals.HEIGHT/4*3, (double)Globals.HEIGHT/4*3);
 	}
 	
 	//initializes keyboard inputs for the game actions
@@ -58,12 +57,12 @@ public class Main extends GameWindow// implements KeyListener
 		p1Thrust=new GameAction("thrust");
 		p1RotateL=new GameAction("rotate left");
 		p1RotateR=new GameAction("rotate right");
-		p1Shoot=new GameAction("shoot", GameAction.DETECT_INITIAL_ONLY);
+		p1Shoot=new GameAction("shoot");
 		
 		p2Thrust=new GameAction("thrust");
 		p2RotateL=new GameAction("rotate left");
 		p2RotateR=new GameAction("rotate right");
-		p2Shoot=new GameAction("shoot", GameAction.DETECT_INITIAL_ONLY);
+		p2Shoot=new GameAction("shoot");
 		
 		
 		inMan.mapActToKey(p1Thrust, KeyEvent.VK_W);
@@ -74,7 +73,7 @@ public class Main extends GameWindow// implements KeyListener
 		inMan.mapActToKey(p2Thrust, KeyEvent.VK_UP);
 		inMan.mapActToKey(p2RotateL, KeyEvent.VK_LEFT);
 		inMan.mapActToKey(p2RotateR, KeyEvent.VK_RIGHT);
-		inMan.mapActToKey(p2Shoot, KeyEvent.VK_SLASH);
+		inMan.mapActToKey(p2Shoot, KeyEvent.VK_CONTROL);
 		
 	}
 	
@@ -137,6 +136,8 @@ public class Main extends GameWindow// implements KeyListener
 		player1.draw(g);
 		player2.draw(g);
 		
+		alien.draw(g);		
+		
 		g.drawString("HELLO THERE\n", 20, 50);
 	}
 	
@@ -152,8 +153,12 @@ public class Main extends GameWindow// implements KeyListener
 			player1.rotate(diff, Player.LEFT);
 		if(p1RotateR.isPressed())
 			player1.rotate(diff, Player.RIGHT);
+		
+		//TODO THIS COULD BE DONE BETTER????
 		if(p1Shoot.isPressed())
-			player1.shoot(diff);
+			player1.shootOn(diff);
+		else
+			player1.shootOff(diff);
 		
 		if(p2Thrust.isPressed())
 			player2.thrustOn(diff);
@@ -164,9 +169,16 @@ public class Main extends GameWindow// implements KeyListener
 			player2.rotate(diff, Player.LEFT);
 		if(p2RotateR.isPressed())
 			player2.rotate(diff, Player.RIGHT);
+		
+		//TODO THIS COULD BE DONE BETTER????
 		if(p2Shoot.isPressed())
-			player2.shoot(diff);
+			player2.shootOn(diff);
+		else
+			player2.shootOff(diff);
 			
+		
+		alien.updatePos();
+		alien.checkEdges();
 			
 		player1.updatePos();
 		player1.checkEdges();

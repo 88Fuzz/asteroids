@@ -10,9 +10,12 @@ public class BaseClass
 	protected double vx;
 	//y velocity, pixels per millimeter
 	protected double vy;
+	//y velocity, pixels per millimeter
+	protected double vVelocity;
 	protected double g;
 	protected double rotate;
 	protected double vRotate;
+	protected double maxSpeed;
 	
 	public double get_x()
 	{

@@ -3,42 +3,66 @@ package com.butt.ast;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
+import java.awt.image.BufferedImage;
 import java.awt.image.BufferedImageOp;
+import java.util.ArrayList;
+import java.util.List;
 
 //contains the player's ship
 public class Player extends Sprite
 {
 	public static final boolean LEFT=false;
 	public static final boolean RIGHT=true;
-	private double vVelocity;
-	private double friction;
-	private Bullet b1;
+	public static final int bulletDelay=75;
+	public static final int burstDelay=400;
 	
-	public Player(String imgLoc)
+	
+	private double friction;
+	private ArrayList<Bullet> bullets;
+	private int numBulletsBurst;
+	private int bulletDelayDiff;
+	private int burstDelayDiff;
+	private String bulletImg;
+	private boolean burstWait;
+	
+	public Player(String imgLoc, String bullet)
 	{
 		super(imgLoc);
-		vRotate=Globals.g_playervRotate;
-		vVelocity=Globals.g_playervVelocity;
-		friction=Globals.g_playerFriction;
-		b1=new Bullet(Globals.p1Bullet, 0, 0, 0);
+		bulletImg=bullet;
+		maxSpeed=5.0;
+		vRotate=.25;
+		vVelocity=.8;
+		friction=.00004;
+		bulletDelayDiff=bulletDelay;
+		burstDelayDiff=burstDelay;
+		numBulletsBurst=0;
+		bullets=new ArrayList<Bullet>();
+		burstWait=false;
+	}
+	
+	public Player(String imgLoc, String bullet, double xpos, double ypos)
+	{
+		this(imgLoc, bullet);
+		x=xpos;
+		y=ypos;
 	}
 	
 	//player is accelerating
 	public void thrustOn(long diff)
-	{		
+	{
 		vx+=vVelocity*Math.sin(Math.toRadians(rotate));
 		vy+=-vVelocity*Math.cos(Math.toRadians(rotate));
 		
 		//check speedlimit of ship
-		if(vx>Globals.g_player1maxSpeed)
-			vx=Globals.g_player1maxSpeed;
-		else if(vx<-Globals.g_player1maxSpeed)
-			vx=-Globals.g_player1maxSpeed;
+		if(vx>maxSpeed)
+			vx=maxSpeed;
+		else if(vx<-maxSpeed)
+			vx=-maxSpeed;
 		
-		if(vy>Globals.g_player1maxSpeed)
-			vy=Globals.g_player1maxSpeed;
-		else if(vy<-Globals.g_player1maxSpeed)
-			vy=-Globals.g_player1maxSpeed;
+		if(vy>maxSpeed)
+			vy=maxSpeed;
+		else if(vy<-maxSpeed)
+			vy=-maxSpeed;
 	}
 	
 	//activates the friction force to eventually slow down the ship
@@ -70,13 +94,40 @@ public class Player extends Sprite
 	}
 	
 	//shoots a bullet from the ship
-	public void shoot(long diff)
+	public void shootOn(long diff)
 	{
-		b1.set_x(x+img.getWidth()/2);
-		b1.set_y(y+img.getHeight()/2);
+		bulletDelayDiff+=diff;
+		burstDelayDiff+=diff;
 		
-		b1.set_vx((Globals.g_bulletMaxSpeed+vVelocity)*Math.sin(Math.toRadians(rotate)));
-		b1.set_vy((Globals.g_bulletMaxSpeed+vVelocity)*-Math.cos(Math.toRadians(rotate)));
+		if(burstWait && burstDelayDiff>burstDelay)
+		{
+			burstDelayDiff=0;
+			burstWait=false;
+		}
+		
+		if(bulletDelayDiff>bulletDelay && !burstWait)
+		{
+			bulletDelayDiff=0;
+			bullets.add(new Bullet(bulletImg, x+img.getWidth()/2, 
+									y+img.getHeight()/2, 
+									vVelocity, rotate, bullets.size()+1));
+			numBulletsBurst++;
+		}
+		
+		if(numBulletsBurst==4)
+		{
+			burstWait=true;
+			numBulletsBurst=0;
+			burstDelayDiff=0;
+		}
+	}
+	
+	public void shootOff(long diff)
+	{
+		bulletDelayDiff=600;
+		burstDelayDiff=0;
+		numBulletsBurst=0;
+		burstWait=false;
 	}
 	
 	public void checkEdges()
@@ -96,19 +147,23 @@ public class Player extends Sprite
 		else if(rotate<-360)
 			rotate=0;
 		
-		b1.checkEdges();
+		for(Bullet tmp:bullets)
+			tmp.checkEdges();
 	}
 	
 	public void updatePos()
 	{
 		x+=vx;
 		y+=vy;
-		b1.updatePos();
-	}
-	
-	public Bullet getBullet()
-	{
-		return b1;
+		
+		//update bullet positions
+		for(int j=0; j<bullets.size(); j++)
+		{
+			//if bullet has traveled greater than the width of the screen, then updatePosMax will be true
+			if(bullets.get(j).updatePosMax())
+				bullets.remove(j);
+				
+		}
 	}
 	
 	public void draw(Graphics2D g)
@@ -118,6 +173,8 @@ public class Player extends Sprite
 		AffineTransformOp op=new AffineTransformOp(tx,AffineTransformOp.TYPE_BILINEAR);
 		
 		g.drawImage(op.filter(img, null), ops, (int)Math.round(x), (int)Math.round(y));
-		g.drawImage(b1.getImage(), ops, (int)b1.get_x(), (int)b1.get_y());
+		for(Bullet tmp:bullets)
+			tmp.draw(g);
+			//g.drawImage(tmp.getImage(), ops, (int)tmp.get_x(), (int)tmp.get_y());
 	}
 }
