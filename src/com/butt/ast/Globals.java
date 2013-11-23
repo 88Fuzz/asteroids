@@ -24,6 +24,9 @@ public class Globals
 	public static final String alienShip="images/alien.png";
 	public static final String alienBullet="images/alienBullet.png";
 	
+	
+	public static Player player1;
+	
 	//public static final double g_bulletMaxSpeed=8;
 	//public static final double g_player1maxSpeed=5;
 	//public static final double g_playervRotate=.25;

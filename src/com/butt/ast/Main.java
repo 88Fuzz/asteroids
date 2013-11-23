@@ -4,9 +4,6 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.Window;
 import java.awt.event.KeyEvent;
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
-import java.awt.image.BufferedImageOp;
 
 //initializes everything and stuff
 public class Main extends GameWindow// implements KeyListener
@@ -17,7 +14,7 @@ public class Main extends GameWindow// implements KeyListener
 	}
 	
 	//player 1 and 2 classes
-	private Player player1;
+	//private Player player1;
 	private Player player2;
 	private InputManager inMan;
 	private GameAction p1Thrust;
@@ -45,10 +42,10 @@ public class Main extends GameWindow// implements KeyListener
 	
 	private void createSprites()
 	{
-		player1=new Player(Globals.p1Img, Globals.p1Bullet, (double)Globals.WIDTH/2, (double)Globals.HEIGHT/2);
+		Globals.player1=new Player(Globals.p1Img, Globals.p1Bullet, (double)Globals.WIDTH/2, (double)Globals.HEIGHT/2);
 		player2=new Player(Globals.p2Img, Globals.p2Bullet, (double)Globals.WIDTH/4, (double)Globals.HEIGHT/4);
 		
-		alien= new Alien(Globals.alienShip, Globals.alienBullet, (double)Globals.HEIGHT/4*3, (double)Globals.HEIGHT/4*3);
+		alien= new Alien(Globals.alienShip, Globals.alienBullet, (double)Globals.WIDTH/4*3, (double)Globals.HEIGHT/4*3);
 	}
 	
 	//initializes keyboard inputs for the game actions
@@ -133,7 +130,7 @@ public class Main extends GameWindow// implements KeyListener
 		g.fillRect(0, 0, Globals.WIDTH, Globals.HEIGHT);
 		g.setColor(window.getForeground());
 
-		player1.draw(g);
+		Globals.player1.draw(g);
 		player2.draw(g);
 		
 		alien.draw(g);		
@@ -145,20 +142,20 @@ public class Main extends GameWindow// implements KeyListener
 	public void updateGraphicsPos(long diff)
 	{
 		if(p1Thrust.isPressed())
-			player1.thrustOn(diff);
+			Globals.player1.thrustOn(diff);
 		else
-			player1.thrustOff(diff);
+			Globals.player1.thrustOff(diff);
 		
 		if(p1RotateL.isPressed())
-			player1.rotate(diff, Player.LEFT);
+			Globals.player1.rotate(diff, Player.LEFT);
 		if(p1RotateR.isPressed())
-			player1.rotate(diff, Player.RIGHT);
+			Globals.player1.rotate(diff, Player.RIGHT);
 		
 		//TODO THIS COULD BE DONE BETTER????
 		if(p1Shoot.isPressed())
-			player1.shootOn(diff);
+			Globals.player1.shootOn(diff);
 		else
-			player1.shootOff(diff);
+			Globals.player1.shootOff(diff);
 		
 		if(p2Thrust.isPressed())
 			player2.thrustOn(diff);
@@ -180,8 +177,8 @@ public class Main extends GameWindow// implements KeyListener
 		alien.updatePos();
 		alien.checkEdges();
 			
-		player1.updatePos();
-		player1.checkEdges();
+		Globals.player1.updatePos();
+		Globals.player1.checkEdges();
 		
 		player2.updatePos();
 		player2.checkEdges();

@@ -108,8 +108,8 @@ public class Player extends Sprite
 		if(bulletDelayDiff>bulletDelay && !burstWait)
 		{
 			bulletDelayDiff=0;
-			bullets.add(new Bullet(bulletImg, x+img.getWidth()/2, 
-									y+img.getHeight()/2, 
+			bullets.add(new Bullet(bulletImg, x, y ,
+									img.getWidth()/2, img.getHeight()/2, 
 									vVelocity, rotate, bullets.size()+1));
 			numBulletsBurst++;
 		}

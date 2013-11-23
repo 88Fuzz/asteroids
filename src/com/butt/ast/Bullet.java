@@ -4,12 +4,12 @@ public class Bullet extends Sprite
 {
 	private int index;
 	private double dist;
-	public Bullet(String imgLoc, double xPos, double yPos, double vShip, double rotation, int index)
+	public Bullet(String imgLoc, double xPos, double yPos, double xWidthHalf, double yWidthHalf, double vShip, double rotation, int index)
 	{
 		super(imgLoc);
 		dist=0;
-		x=xPos;
-		y=yPos;
+		x=xPos+xWidthHalf;//+Math.sin(Math.toRadians(rotation));
+		y=yPos+yWidthHalf;//-Math.cos(Math.toRadians(rotation));
 		maxSpeed=8;
 		vx=(maxSpeed+vShip)*Math.sin(Math.toRadians(rotation));
 		vy=(maxSpeed+vShip)*-Math.cos(Math.toRadians(rotation));
