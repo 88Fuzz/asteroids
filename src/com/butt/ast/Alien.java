@@ -30,11 +30,12 @@ public class Alien extends Sprite
 		bullets=new ArrayList<Bullet>();
 	}
 	
-	public Alien(String imgLoc, String bullet, double xpos, double ypos)
+	public Alien(String imgLoc, String bullet, double xpos, double ypos, int hitCode)
 	{
 		this(imgLoc, bullet);
 		x=xpos;
 		y=ypos;
+		this.hitCode=hitCode;
 	}
 	
 	public void genDir()
@@ -91,7 +92,7 @@ public class Alien extends Sprite
 			genBulletDist();
 			bullets.add(new Bullet(bulletImg, x, y,
 					img.getWidth()/2, 0, 
-					vVelocity, tmpAngle, bullets.size()+1));
+					vVelocity, tmpAngle, bullets.size()+1, hitCode));
 		}
 		
 		if(distCount>dist)
@@ -103,8 +104,12 @@ public class Alien extends Sprite
 		//update bullet positions
 		for(int j=0; j<bullets.size(); j++)
 		{
+			if(bullets.get(j).checkHits())
+			{
+				bullets.remove(j);
+			}
 			//if bullet has traveled greater than the width of the screen, then updatePosMax will be true
-			if(bullets.get(j).updatePosMax())
+			else if(bullets.get(j).updatePosMax())
 				bullets.remove(j);			
 		}
 	}
@@ -144,9 +149,35 @@ public class Alien extends Sprite
 		AffineTransform tx=AffineTransform.getRotateInstance(0, img.getWidth()/2, img.getHeight()/2);
 		AffineTransformOp op=new AffineTransformOp(tx,AffineTransformOp.TYPE_BILINEAR);
 		
-		g.drawImage(op.filter(img, null), ops, (int)Math.round(x), (int)Math.round(y));
+		if(alive)
+			g.drawImage(op.filter(img, null), ops, (int)Math.round(x), (int)Math.round(y));
+		
 		for(Bullet tmp:bullets)
 			tmp.draw(g);
 			//g.drawImage(tmp.getImage(), ops, (int)tmp.get_x(), (int)tmp.get_y());
+	}
+	
+	//gets the x position of hitbox
+	public int getHit_xBody()
+	{
+		return (int)Math.round(x);
+	}
+		
+	//gets the y position of hitbox
+	public int getHit_yBody()
+	{
+		return (int)Math.round(y)+7;
+	}
+	
+	//return hitbox width
+	public int getHitWidthBody()
+	{
+		return 30;
+	}
+	
+	//return hitbox height
+	public int getHitHeightBody()
+	{
+		return 8;
 	}
 }

@@ -16,6 +16,23 @@ public class BaseClass
 	protected double rotate;
 	protected double vRotate;
 	protected double maxSpeed;
+	protected boolean alive;
+	protected int hitCode;
+	
+	BaseClass()
+	{
+		alive=true;
+		maxSpeed=0;
+		vRotate=0;
+		rotate=0;
+		g=0;
+		vVelocity=0;
+		vy=0;
+		vx=0;
+		x=0;
+		y=0;
+		hitCode=-1;
+	}
 	
 	public double get_x()
 	{
@@ -89,6 +106,16 @@ public class BaseClass
 	{
 		x+=vx;
 		y+=vy;
+	}
+	
+	public boolean isAlive()
+	{
+		return alive;
+	}
+	
+	public void hit()
+	{
+		alive=false;
 	}
 	
 /*	public void updateLoc(long deltaT)

@@ -26,6 +26,13 @@ public class Globals
 	
 	
 	public static Player player1;
+	public static Player player2;
+	public static Alien alien;
+	
+	//hit detection codes
+	public static final int HITALLBUTPLAYER1=1;
+	public static final int HITALLBUTPLAYER2=2;
+	public static final int HITPLAYER1N2=3;
 	
 	//public static final double g_bulletMaxSpeed=8;
 	//public static final double g_player1maxSpeed=5;

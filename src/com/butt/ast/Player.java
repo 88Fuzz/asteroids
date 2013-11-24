@@ -15,6 +15,9 @@ public class Player extends Sprite
 	public static final boolean RIGHT=true;
 	public static final int bulletDelay=75;
 	public static final int burstDelay=400;
+	private static final int MAXBULLETS=30;
+	private static final int HITWIDTH=20;
+	private static final int HITHEIGHT=20;
 	
 	
 	private double friction;
@@ -40,11 +43,12 @@ public class Player extends Sprite
 		burstWait=false;
 	}
 	
-	public Player(String imgLoc, String bullet, double xpos, double ypos)
+	public Player(String imgLoc, String bullet, double xpos, double ypos, int hitCode)
 	{
 		this(imgLoc, bullet);
 		x=xpos;
 		y=ypos;
+		this.hitCode=hitCode;
 	}
 	
 	//player is accelerating
@@ -110,9 +114,14 @@ public class Player extends Sprite
 			bulletDelayDiff=0;
 			bullets.add(new Bullet(bulletImg, x, y ,
 									img.getWidth()/2, img.getHeight()/2, 
-									vVelocity, rotate, bullets.size()+1));
+									vVelocity, rotate, bullets.size()+1, hitCode));
 			numBulletsBurst++;
 		}
+		
+		
+		//limits the number of bullets that can be on screen
+		if(bullets.size()>MAXBULLETS)
+			bullets.remove(0);
 		
 		if(numBulletsBurst==4)
 		{
@@ -159,11 +168,40 @@ public class Player extends Sprite
 		//update bullet positions
 		for(int j=0; j<bullets.size(); j++)
 		{
+			//check bullet's hit objects
+			if(bullets.get(j).checkHits())
+			{
+				bullets.remove(j);
+			}
 			//if bullet has traveled greater than the width of the screen, then updatePosMax will be true
-			if(bullets.get(j).updatePosMax())
+			else if(bullets.get(j).updatePosMax())
 				bullets.remove(j);
 				
 		}
+	}
+	
+	//gets the x position of hitbox
+	public int getHit_x()
+	{
+		return (int)Math.round(x)+5;
+	}
+	
+	//gets the y position of hitbox
+	public int getHit_y()
+	{
+		return (int)Math.round(y)+5;
+	}
+	
+	//return hitbox width
+	public int getHitWidth()
+	{
+		return HITWIDTH;
+	}
+	
+	//return hitbox height
+	public int getHitHeight()
+	{
+		return HITHEIGHT;
 	}
 	
 	public void draw(Graphics2D g)
@@ -172,7 +210,9 @@ public class Player extends Sprite
 		AffineTransform tx=AffineTransform.getRotateInstance(Math.toRadians(rotate), img.getWidth()/2, img.getHeight()/2);
 		AffineTransformOp op=new AffineTransformOp(tx,AffineTransformOp.TYPE_BILINEAR);
 		
-		g.drawImage(op.filter(img, null), ops, (int)Math.round(x), (int)Math.round(y));
+		if(alive)
+			g.drawImage(op.filter(img, null), ops, (int)Math.round(x), (int)Math.round(y));
+		
 		for(Bullet tmp:bullets)
 			tmp.draw(g);
 			//g.drawImage(tmp.getImage(), ops, (int)tmp.get_x(), (int)tmp.get_y());

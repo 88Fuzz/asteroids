@@ -15,7 +15,7 @@ public class Main extends GameWindow// implements KeyListener
 	
 	//player 1 and 2 classes
 	//private Player player1;
-	private Player player2;
+	//private Player player2;
 	private InputManager inMan;
 	private GameAction p1Thrust;
 	private GameAction p2Thrust;
@@ -26,7 +26,7 @@ public class Main extends GameWindow// implements KeyListener
 	private GameAction p1Shoot;
 	private GameAction p2Shoot;
 	
-	private Alien alien;//WILL NEED TO BE CHANGED
+	//private Alien alien;//WILL NEED TO BE CHANGED
 	
 	public void init()
 	{
@@ -42,10 +42,10 @@ public class Main extends GameWindow// implements KeyListener
 	
 	private void createSprites()
 	{
-		Globals.player1=new Player(Globals.p1Img, Globals.p1Bullet, (double)Globals.WIDTH/2, (double)Globals.HEIGHT/2);
-		player2=new Player(Globals.p2Img, Globals.p2Bullet, (double)Globals.WIDTH/4, (double)Globals.HEIGHT/4);
+		Globals.player1=new Player(Globals.p1Img, Globals.p1Bullet, (double)Globals.WIDTH/2, (double)Globals.HEIGHT/2, Globals.HITALLBUTPLAYER1);
+		Globals.player2=new Player(Globals.p2Img, Globals.p2Bullet, (double)Globals.WIDTH/4, (double)Globals.HEIGHT/4, Globals.HITALLBUTPLAYER2);
 		
-		alien= new Alien(Globals.alienShip, Globals.alienBullet, (double)Globals.WIDTH/4*3, (double)Globals.HEIGHT/4*3);
+		Globals.alien= new Alien(Globals.alienShip, Globals.alienBullet, (double)Globals.WIDTH/4*3, (double)Globals.HEIGHT/4*3, Globals.HITPLAYER1N2);
 	}
 	
 	//initializes keyboard inputs for the game actions
@@ -131,9 +131,9 @@ public class Main extends GameWindow// implements KeyListener
 		g.setColor(window.getForeground());
 
 		Globals.player1.draw(g);
-		player2.draw(g);
+		Globals.player2.draw(g);
 		
-		alien.draw(g);		
+		Globals.alien.draw(g);		
 		
 		g.drawString("HELLO THERE\n", 20, 50);
 	}
@@ -141,6 +141,8 @@ public class Main extends GameWindow// implements KeyListener
 	//checks if keys are pressed and takes the actions if keys are pressed
 	public void updateGraphicsPos(long diff)
 	{
+		if(Globals.player1.isAlive())
+		{
 		if(p1Thrust.isPressed())
 			Globals.player1.thrustOn(diff);
 		else
@@ -156,31 +158,41 @@ public class Main extends GameWindow// implements KeyListener
 			Globals.player1.shootOn(diff);
 		else
 			Globals.player1.shootOff(diff);
+		}
 		
+		if(Globals.player2.isAlive())
+		{
 		if(p2Thrust.isPressed())
-			player2.thrustOn(diff);
+			Globals.player2.thrustOn(diff);
 		else
-			player2.thrustOff(diff);
+			Globals.player2.thrustOff(diff);
 		
 		if(p2RotateL.isPressed())
-			player2.rotate(diff, Player.LEFT);
+			Globals.player2.rotate(diff, Player.LEFT);
 		if(p2RotateR.isPressed())
-			player2.rotate(diff, Player.RIGHT);
+			Globals.player2.rotate(diff, Player.RIGHT);
 		
 		//TODO THIS COULD BE DONE BETTER????
 		if(p2Shoot.isPressed())
-			player2.shootOn(diff);
+			Globals.player2.shootOn(diff);
 		else
-			player2.shootOff(diff);
+			Globals.player2.shootOff(diff);
+		}
 			
-		
-		alien.updatePos();
-		alien.checkEdges();
+		if(Globals.alien.isAlive())
+		{
+			Globals.alien.updatePos();
+			Globals.alien.checkEdges();
+		}
+		else//do spawn checking stuff
+		{
+			
+		}
 			
 		Globals.player1.updatePos();
 		Globals.player1.checkEdges();
 		
-		player2.updatePos();
-		player2.checkEdges();
+		Globals.player2.updatePos();
+		Globals.player2.checkEdges();
 	}
 }
