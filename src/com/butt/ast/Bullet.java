@@ -39,7 +39,7 @@ public class Bullet extends Sprite
 		if(hitCode==Globals.HITALLBUTPLAYER1)
 		{
 			//check player2
-			if(Globals.player2.getHit_x() < x && x < Globals.player2.getHit_x()+Globals.player2.getHitWidth()//check the x coordinates
+			if(Globals.player2.isAlive() && Globals.player2.getHit_x() < x && x < Globals.player2.getHit_x()+Globals.player2.getHitWidth()//check the x coordinates
 					&& Globals.player2.getHit_y() < y && y < Globals.player2.getHit_y()+Globals.player2.getHitHeight())
 			{
 				Globals.player2.hit();
@@ -57,7 +57,7 @@ public class Bullet extends Sprite
 		else if(hitCode==Globals.HITALLBUTPLAYER2)
 		{
 			//check player1
-			if(Globals.player1.getHit_x() < x && x < Globals.player1.getHit_x()+Globals.player1.getHitWidth()//check the x coordinates
+			if(Globals.player1.isAlive() && Globals.player1.getHit_x() < x && x < Globals.player1.getHit_x()+Globals.player1.getHitWidth()//check the x coordinates
 					&& Globals.player1.getHit_y() < y && y < Globals.player1.getHit_y()+Globals.player1.getHitHeight())
 			{
 				Globals.player1.hit();
@@ -75,7 +75,7 @@ public class Bullet extends Sprite
 		else if(hitCode==Globals.HITPLAYER1N2)
 		{
 			//check player2
-			if(Globals.player2.getHit_x() < x && x < Globals.player2.getHit_x()+Globals.player2.getHitWidth()//check the x coordinates
+			if(Globals.player2.isAlive() && Globals.player2.getHit_x() < x && x < Globals.player2.getHit_x()+Globals.player2.getHitWidth()//check the x coordinates
 					&& Globals.player2.getHit_y() < y && y < Globals.player2.getHit_y()+Globals.player2.getHitHeight())
 			{
 				Globals.player2.hit();
@@ -83,7 +83,7 @@ public class Bullet extends Sprite
 			}
 			
 			//check player1
-			if(Globals.player1.getHit_x() < x && x < Globals.player1.getHit_x()+Globals.player1.getHitWidth()//check the x coordinates
+			if(Globals.player1.isAlive() && Globals.player1.getHit_x() < x && x < Globals.player1.getHit_x()+Globals.player1.getHitWidth()//check the x coordinates
 					&& Globals.player1.getHit_y() < y && y < Globals.player1.getHit_y()+Globals.player1.getHitHeight())
 			{
 				Globals.player1.hit();

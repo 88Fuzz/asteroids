@@ -27,6 +27,10 @@ public class Player extends Sprite
 	private int burstDelayDiff;
 	private String bulletImg;
 	private boolean burstWait;
+	private int spawnCnt;
+	private int spawnTime;
+	private double xSpawn;
+	private double ySpawn;
 	
 	public Player(String imgLoc, String bullet)
 	{
@@ -39,6 +43,7 @@ public class Player extends Sprite
 		bulletDelayDiff=bulletDelay;
 		burstDelayDiff=burstDelay;
 		numBulletsBurst=0;
+		spawnTime=10000;//swt spawntime to two seconds
 		bullets=new ArrayList<Bullet>();
 		burstWait=false;
 	}
@@ -48,6 +53,8 @@ public class Player extends Sprite
 		this(imgLoc, bullet);
 		x=xpos;
 		y=ypos;
+		xSpawn=xpos;
+		ySpawn=ypos;
 		this.hitCode=hitCode;
 	}
 	
@@ -166,17 +173,21 @@ public class Player extends Sprite
 		y+=vy;
 		
 		//update bullet positions
+		updateBullets();
+	}
+	
+	public void updateBullets()
+	{
+		//update bullet positions
 		for(int j=0; j<bullets.size(); j++)
 		{
-			//check bullet's hit objects
 			if(bullets.get(j).checkHits())
 			{
 				bullets.remove(j);
 			}
 			//if bullet has traveled greater than the width of the screen, then updatePosMax will be true
 			else if(bullets.get(j).updatePosMax())
-				bullets.remove(j);
-				
+				bullets.remove(j);			
 		}
 	}
 	
@@ -204,6 +215,15 @@ public class Player extends Sprite
 		return HITHEIGHT;
 	}
 	
+	public void checkSpawn(long diff)
+	{
+		spawnCnt+=diff;
+		if(spawnCnt>spawnTime)
+			alive=true;
+		
+		updateBullets();
+	}
+	
 	public void draw(Graphics2D g)
 	{
 		BufferedImageOp ops = null;
@@ -216,5 +236,16 @@ public class Player extends Sprite
 		for(Bullet tmp:bullets)
 			tmp.draw(g);
 			//g.drawImage(tmp.getImage(), ops, (int)tmp.get_x(), (int)tmp.get_y());
+	}
+	
+	public void hit()
+	{
+		alive=false;
+		x=xSpawn;
+		y=ySpawn;
+		rotate=0;
+		vx=0;
+		vy=0;
+		spawnCnt=0;
 	}
 }

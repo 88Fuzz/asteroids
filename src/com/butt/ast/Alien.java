@@ -17,6 +17,8 @@ public class Alien extends Sprite
 	private double distCount;
 	private Bullet bullet;
 	private ArrayList<Bullet> bullets;
+	private int spawnCnt;
+	private int spawnTime;
 	
 	public Alien(String imgLoc, String bullet)
 	{
@@ -24,18 +26,49 @@ public class Alien extends Sprite
 		bulletImg=bullet;
 		maxSpeed=5;
 		generator = new Random();
-		genDir();
+		genDirFirst();
 		genDist();
 		genBulletDist();
 		bullets=new ArrayList<Bullet>();
+		genPos();
+		genRespawnTime();
+		alive=false;
 	}
 	
-	public Alien(String imgLoc, String bullet, double xpos, double ypos, int hitCode)
+	public Alien(String imgLoc, String bullet, int hitCode)
 	{
 		this(imgLoc, bullet);
-		x=xpos;
-		y=ypos;
 		this.hitCode=hitCode;
+	}
+	
+	//does not let the ship move left and right the first time
+	public void genDirFirst()
+	{
+		rotate=generator.nextInt(8);//8 different angles
+		
+		switch((int)rotate)
+		{
+		//case 0: rotate=0;
+		//	break;
+		case 1: rotate=45;
+			break;
+		case 2: rotate=90;
+			break;
+		case 3: rotate=135;
+			break;
+		//case 4: rotate=180;
+		//	break;
+		case 5: rotate=225;
+			break;
+		case 6: rotate=270;
+			break;
+		case 7: rotate=315;
+			break;
+		default: rotate=315;
+		}
+		
+		vx=maxSpeed*Math.sin(Math.toRadians(rotate));
+		vy=-maxSpeed*Math.cos(Math.toRadians(rotate));
 	}
 	
 	public void genDir()
@@ -101,6 +134,11 @@ public class Alien extends Sprite
 			genDist();
 		}
 		
+		updateBullets();
+	}
+	
+	public void updateBullets()
+	{
 		//update bullet positions
 		for(int j=0; j<bullets.size(); j++)
 		{
@@ -179,5 +217,36 @@ public class Alien extends Sprite
 	public int getHitHeightBody()
 	{
 		return 8;
+	}
+	
+	public void genPos()
+	{
+		x=Globals.WIDTH;
+		y=generator.nextInt(Globals.HEIGHT);
+	}
+	
+	public void genRespawnTime()
+	{
+		spawnCnt=0;
+		spawnTime=generator.nextInt(30000)+30000;//will spawn between 30 and 60 seconds 
+	}
+	
+	public void checkSpawn(long diff)
+	{
+		spawnCnt+=diff;
+		if(spawnCnt>spawnTime)
+			alive=true;
+		
+		updateBullets();
+	}
+	
+	public void hit()
+	{
+		alive=false;
+		genDirFirst();
+		genDist();
+		genBulletDist();
+		genPos();
+		genRespawnTime();
 	}
 }

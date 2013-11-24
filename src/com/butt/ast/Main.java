@@ -1,5 +1,6 @@
 package com.butt.ast;
 
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.Window;
@@ -42,10 +43,10 @@ public class Main extends GameWindow// implements KeyListener
 	
 	private void createSprites()
 	{
-		Globals.player1=new Player(Globals.p1Img, Globals.p1Bullet, (double)Globals.WIDTH/2, (double)Globals.HEIGHT/2, Globals.HITALLBUTPLAYER1);
-		Globals.player2=new Player(Globals.p2Img, Globals.p2Bullet, (double)Globals.WIDTH/4, (double)Globals.HEIGHT/4, Globals.HITALLBUTPLAYER2);
+		Globals.player1=new Player(Globals.p1Img, Globals.p1Bullet, (double)Globals.WIDTH/2+Globals.WIDTH/4, (double)Globals.HEIGHT/2, Globals.HITALLBUTPLAYER1);
+		Globals.player2=new Player(Globals.p2Img, Globals.p2Bullet, (double)Globals.WIDTH/2-Globals.WIDTH/4, (double)Globals.HEIGHT/2, Globals.HITALLBUTPLAYER2);
 		
-		Globals.alien= new Alien(Globals.alienShip, Globals.alienBullet, (double)Globals.WIDTH/4*3, (double)Globals.HEIGHT/4*3, Globals.HITPLAYER1N2);
+		Globals.alien= new Alien(Globals.alienShip, Globals.alienBullet, Globals.HITPLAYER1N2);
 	}
 	
 	//initializes keyboard inputs for the game actions
@@ -124,6 +125,11 @@ public class Main extends GameWindow// implements KeyListener
 	//draws the images on screen
 	public synchronized void draw(Graphics2D g)
 	{
+		int titleFont=Globals.WIDTH/10;
+		int optionFont=titleFont/7;
+		int hOffset=Globals.HEIGHT/10+titleFont;
+		int wOffset=Globals.WIDTH/100;
+		
 		Window window=device.getFullScreenWindow();
 		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		g.setColor(window.getBackground());
@@ -133,9 +139,23 @@ public class Main extends GameWindow// implements KeyListener
 		Globals.player1.draw(g);
 		Globals.player2.draw(g);
 		
-		Globals.alien.draw(g);		
+		Globals.alien.draw(g);
 		
-		g.drawString("HELLO THERE\n", 20, 50);
+		g.setFont(new Font("dialog", Font.PLAIN, titleFont));
+		g.drawString("ASTEROIDS", wOffset, hOffset);
+		hOffset+=titleFont;
+		
+		g.setFont(new Font("dialog", Font.PLAIN, optionFont));
+		g.drawString("option1", wOffset, hOffset);
+		hOffset+=titleFont/3;
+		g.drawString("option2", wOffset, hOffset);
+		hOffset+=titleFont/3;
+		g.drawString("option3", wOffset, hOffset);
+		hOffset+=titleFont/3;
+		g.drawString("option4", wOffset, hOffset);
+		hOffset+=titleFont/3;
+		g.drawString("option5", wOffset, hOffset);
+		hOffset+=titleFont/3;
 	}
 	
 	//checks if keys are pressed and takes the actions if keys are pressed
@@ -186,13 +206,27 @@ public class Main extends GameWindow// implements KeyListener
 		}
 		else//do spawn checking stuff
 		{
-			
+			Globals.alien.checkSpawn(diff);
 		}
-			
-		Globals.player1.updatePos();
-		Globals.player1.checkEdges();
 		
-		Globals.player2.updatePos();
-		Globals.player2.checkEdges();
+		if(Globals.player1.isAlive())
+		{
+			Globals.player1.updatePos();
+			Globals.player1.checkEdges();
+		}
+		else
+		{
+			Globals.player1.checkSpawn(diff);
+		}
+		
+		if(Globals.player2.isAlive())
+		{
+			Globals.player2.updatePos();
+			Globals.player2.checkEdges();
+		}
+		else
+		{
+			Globals.player2.checkSpawn(diff);
+		}
 	}
 }
