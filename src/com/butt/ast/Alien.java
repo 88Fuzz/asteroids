@@ -114,18 +114,37 @@ public class Alien extends Sprite
 		
 		if(bulletWaitCount>bulletWait)
 		{
-			//find angle between alien and player1
-			dx=x-Globals.player1.get_x();
-			dy=y-(Globals.player1.get_y()+Globals.player1.getHeight()/2);
-			tmpAngle=-Math.toDegrees(Math.atan(dx/dy));
-			
-			if(dy<0)
-				tmpAngle=-(180-tmpAngle);
-
 			genBulletDist();
+			
+			if(Globals.player1.isAlive())
+			{
+				//find angle between alien and player1
+				dx=x-Globals.player1.get_x();
+				dy=y-(Globals.player1.get_y()+Globals.player1.getHeight()/2);
+				tmpAngle=-Math.toDegrees(Math.atan(dx/dy));
+			
+				if(dy<0)
+					tmpAngle=-(180-tmpAngle);
+
+			
 			bullets.add(new Bullet(bulletImg, x, y,
-					img.getWidth()/2, 0, 
-					vVelocity, tmpAngle, bullets.size()+1, hitCode));
+						img.getWidth()/2, 0, 
+						vVelocity, tmpAngle, bullets.size()+1, hitCode));
+			}
+			
+			if(Globals.player2.isAlive())
+			{
+				dx=x-Globals.player2.get_x();
+				dy=y-(Globals.player2.get_y()+Globals.player2.getHeight()/2);
+				tmpAngle=-Math.toDegrees(Math.atan(dx/dy));
+			
+				if(dy<0)
+					tmpAngle=-(180-tmpAngle);
+			
+				bullets.add(new Bullet(bulletImg, x, y,
+						img.getWidth()/2, 0, 
+						vVelocity, tmpAngle, bullets.size()+1, hitCode));
+			}
 		}
 		
 		if(distCount>dist)
@@ -167,15 +186,42 @@ public class Alien extends Sprite
 	
 	public void checkEdges()
 	{
-		if(x<0)
-			x=Globals.WIDTH;
-		else if(x>Globals.WIDTH)
-			x=0;
+		if(Globals.wrapObjs)
+		{
+			if(x<0)
+				x=Globals.WIDTH;
+			else if(x>Globals.WIDTH)
+				x=0;
 		
-		if(y<0)
-			y=Globals.HEIGHT;
-		else if(y>Globals.HEIGHT)
-			y=0;
+			if(y<0)
+				y=Globals.HEIGHT;
+			else if(y>Globals.HEIGHT)
+				y=0;
+		}
+		else
+		{
+			if(x<0)
+			{
+				x=0;
+				vx*=-1;
+			}
+			else if(x>Globals.WIDTH)
+			{
+				x=Globals.WIDTH;
+				vx*=-1;
+			}
+		
+			if(y<0)
+			{
+				y=0;
+				vy*=-1;
+			}
+			else if(y>Globals.HEIGHT)
+			{
+				y=Globals.HEIGHT;
+				vy*=-1;
+			}
+		}
 		
 		for(Bullet tmp:bullets)
 			tmp.checkEdges();

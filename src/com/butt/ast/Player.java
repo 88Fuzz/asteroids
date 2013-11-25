@@ -148,15 +148,42 @@ public class Player extends Sprite
 	
 	public void checkEdges()
 	{
-		if(x<0)
-			x=Globals.WIDTH;
-		else if(x>Globals.WIDTH)
-			x=0;
+		if(Globals.wrapObjs)
+		{
+			if(x<0)
+				x=Globals.WIDTH;
+			else if(x>Globals.WIDTH)
+				x=0;
 		
-		if(y<0)
-			y=Globals.HEIGHT;
-		else if(y>Globals.HEIGHT)
-			y=0;
+			if(y<0)
+				y=Globals.HEIGHT;
+			else if(y>Globals.HEIGHT)
+				y=0;
+		}
+		else
+		{
+			if(x<0)
+			{
+				x=0;
+				vx*=-1;
+			}
+			else if(x>Globals.WIDTH)
+			{
+				x=Globals.WIDTH;
+				vx*=-1;
+			}
+		
+			if(y<0)
+			{
+				y=0;
+				vy*=-1;
+			}
+			else if(y>Globals.HEIGHT)
+			{
+				y=Globals.HEIGHT;
+				vy*=-1;
+			}
+		}
 		
 		if(rotate>360)
 			rotate=0;
@@ -165,6 +192,12 @@ public class Player extends Sprite
 		
 		for(Bullet tmp:bullets)
 			tmp.checkEdges();
+	}
+	
+	public void gravityPull(double dx, double dy)
+	{
+		vx+=dx;
+		vy+=dy;
 	}
 	
 	public void updatePos()

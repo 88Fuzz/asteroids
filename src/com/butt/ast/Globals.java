@@ -6,6 +6,7 @@ public class Globals
 {
 	public static int PLAY=1;
 	public static int PAUSE=2;
+	public static int START=3;
 	public static int KILL=0;
 	public static final int g_gravity=3;
 	public static int WIDTH=800;
@@ -23,16 +24,23 @@ public class Globals
 	public static final String p2Bullet="images/player2Bullet.png";
 	public static final String alienShip="images/alien.png";
 	public static final String alienBullet="images/alienBullet.png";
+	public static final String gravityImg="images/gravity.png";
 	
 	
 	public static Player player1;
 	public static Player player2;
 	public static Alien alien;
+	public static Gravity gravity;
 	
 	//hit detection codes
 	public static final int HITALLBUTPLAYER1=1;
 	public static final int HITALLBUTPLAYER2=2;
 	public static final int HITPLAYER1N2=3;
+	
+	//controls which option should be high-lighted yellow
+	public static int optionsNum=0;
+	
+	public static boolean wrapObjs=true;
 	
 	
 	//public static final double g_bulletMaxSpeed=8;

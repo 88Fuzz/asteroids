@@ -1,5 +1,6 @@
 package com.butt.ast;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -46,7 +47,9 @@ public class Main extends GameWindow// implements KeyListener
 		Globals.player1=new Player(Globals.p1Img, Globals.p1Bullet, (double)Globals.WIDTH/2+Globals.WIDTH/4, (double)Globals.HEIGHT/2, Globals.HITALLBUTPLAYER1);
 		Globals.player2=new Player(Globals.p2Img, Globals.p2Bullet, (double)Globals.WIDTH/2-Globals.WIDTH/4, (double)Globals.HEIGHT/2, Globals.HITALLBUTPLAYER2);
 		
-		Globals.alien= new Alien(Globals.alienShip, Globals.alienBullet, Globals.HITPLAYER1N2);
+		Globals.alien = new Alien(Globals.alienShip, Globals.alienBullet, Globals.HITPLAYER1N2);
+		
+		Globals.gravity = new Gravity(Globals.gravityImg);
 	}
 	
 	//initializes keyboard inputs for the game actions
@@ -94,6 +97,7 @@ public class Main extends GameWindow// implements KeyListener
 	{
 		long currTime=System.currentTimeMillis();
 		long elapsedTime;
+		Graphics2D g;
 		while(Globals.g_play>0)
 		{
 			//Game is not paused
@@ -104,7 +108,7 @@ public class Main extends GameWindow// implements KeyListener
 			
 				updateGraphicsPos(elapsedTime);
 			
-				Graphics2D g=getGraphics();
+				g=getGraphics();
 				draw(g);
 				g.dispose();
 				update();
@@ -115,21 +119,106 @@ public class Main extends GameWindow// implements KeyListener
 				}
 				catch (InterruptedException ex) { }
 			}
-			else//game is paused
+			else if(Globals.g_play==Globals.START)//game is paused
 			{
+				elapsedTime=System.currentTimeMillis()-currTime;
+				currTime+=elapsedTime;
 				
+				g=getGraphics();
+				drawStart(g);
+				g.dispose();
+				update();
+				try
+				{
+					Thread.sleep(20);
+				}
+				catch (InterruptedException ex) { }
 			}
 		}
 	}
 	
-	//draws the images on screen
-	public synchronized void draw(Graphics2D g)
+	//draws starting screen
+	public synchronized void drawStart(Graphics2D g)
 	{
 		int titleFont=Globals.WIDTH/10;
 		int optionFont=titleFont/7;
 		int hOffset=Globals.HEIGHT/10+titleFont;
 		int wOffset=Globals.WIDTH/100;
+		Window window=device.getFullScreenWindow();
+		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+		g.setColor(window.getBackground());
+		g.fillRect(0, 0, Globals.WIDTH, Globals.HEIGHT);
+		g.setColor(window.getForeground());
 		
+		g.setFont(new Font("dialog", Font.PLAIN, titleFont));
+		g.drawString("ASTEROIDS", wOffset, hOffset);
+		hOffset+=titleFont;
+		
+		g.setFont(new Font("dialog", Font.PLAIN, optionFont));
+		if(Globals.optionsNum==0)
+		{
+			g.setColor(Color.YELLOW);
+		}
+		g.drawString("Play Game", wOffset, hOffset);
+		hOffset+=titleFont/3;
+		if(Globals.optionsNum==0)
+		{
+			g.setColor(Color.WHITE);
+		}
+		
+		
+		if(Globals.optionsNum==1)
+		{
+			g.setColor(Color.YELLOW);
+		}
+		g.drawString("option2", wOffset, hOffset);
+		hOffset+=titleFont/3;
+		if(Globals.optionsNum==1)
+		{
+			g.setColor(Color.WHITE);
+		}
+		
+		
+		if(Globals.optionsNum==2)
+		{
+			g.setColor(Color.YELLOW);
+		}
+		g.drawString("option3", wOffset, hOffset);
+		hOffset+=titleFont/3;
+		if(Globals.optionsNum==2)
+		{
+			g.setColor(Color.WHITE);
+		}
+		
+		
+		if(Globals.optionsNum==3)
+		{
+			g.setColor(Color.YELLOW);
+		}
+		g.drawString("option4", wOffset, hOffset);
+		hOffset+=titleFont/3;
+		if(Globals.optionsNum==3)
+		{
+			g.setColor(Color.WHITE);
+		}
+		
+		
+		if(Globals.optionsNum==4)
+		{
+			g.setColor(Color.YELLOW);
+		}
+		g.drawString("option5", wOffset, hOffset);
+		hOffset+=titleFont/3;
+		if(Globals.optionsNum==4)
+		{
+			g.setColor(Color.WHITE);
+		}
+		
+	}
+	
+	//draws the images on screen
+	public synchronized void draw(Graphics2D g)
+	{
 		Window window=device.getFullScreenWindow();
 		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		g.setColor(window.getBackground());
@@ -140,63 +229,54 @@ public class Main extends GameWindow// implements KeyListener
 		Globals.player2.draw(g);
 		
 		Globals.alien.draw(g);
-		
-		g.setFont(new Font("dialog", Font.PLAIN, titleFont));
-		g.drawString("ASTEROIDS", wOffset, hOffset);
-		hOffset+=titleFont;
-		
-		g.setFont(new Font("dialog", Font.PLAIN, optionFont));
-		g.drawString("option1", wOffset, hOffset);
-		hOffset+=titleFont/3;
-		g.drawString("option2", wOffset, hOffset);
-		hOffset+=titleFont/3;
-		g.drawString("option3", wOffset, hOffset);
-		hOffset+=titleFont/3;
-		g.drawString("option4", wOffset, hOffset);
-		hOffset+=titleFont/3;
-		g.drawString("option5", wOffset, hOffset);
-		hOffset+=titleFont/3;
+		Globals.gravity.draw(g);
 	}
 	
 	//checks if keys are pressed and takes the actions if keys are pressed
 	public void updateGraphicsPos(long diff)
 	{
+		
+		if(Globals.gravity.isAlive())
+		{
+			Globals.gravity.moveShipes(diff);
+		}
+		
 		if(Globals.player1.isAlive())
 		{
-		if(p1Thrust.isPressed())
-			Globals.player1.thrustOn(diff);
-		else
-			Globals.player1.thrustOff(diff);
+			if(p1Thrust.isPressed())
+				Globals.player1.thrustOn(diff);
+			else
+				Globals.player1.thrustOff(diff);
 		
-		if(p1RotateL.isPressed())
-			Globals.player1.rotate(diff, Player.LEFT);
-		if(p1RotateR.isPressed())
-			Globals.player1.rotate(diff, Player.RIGHT);
+			if(p1RotateL.isPressed())
+				Globals.player1.rotate(diff, Player.LEFT);
+			if(p1RotateR.isPressed())
+				Globals.player1.rotate(diff, Player.RIGHT);
 		
-		//TODO THIS COULD BE DONE BETTER????
-		if(p1Shoot.isPressed())
-			Globals.player1.shootOn(diff);
-		else
-			Globals.player1.shootOff(diff);
+			//TODO THIS COULD BE DONE BETTER????
+			if(p1Shoot.isPressed())
+				Globals.player1.shootOn(diff);
+			else
+				Globals.player1.shootOff(diff);
 		}
 		
 		if(Globals.player2.isAlive())
 		{
-		if(p2Thrust.isPressed())
-			Globals.player2.thrustOn(diff);
-		else
-			Globals.player2.thrustOff(diff);
+			if(p2Thrust.isPressed())
+				Globals.player2.thrustOn(diff);
+			else
+				Globals.player2.thrustOff(diff);
 		
-		if(p2RotateL.isPressed())
-			Globals.player2.rotate(diff, Player.LEFT);
-		if(p2RotateR.isPressed())
-			Globals.player2.rotate(diff, Player.RIGHT);
+			if(p2RotateL.isPressed())
+				Globals.player2.rotate(diff, Player.LEFT);
+			if(p2RotateR.isPressed())
+				Globals.player2.rotate(diff, Player.RIGHT);
 		
-		//TODO THIS COULD BE DONE BETTER????
-		if(p2Shoot.isPressed())
-			Globals.player2.shootOn(diff);
-		else
-			Globals.player2.shootOff(diff);
+			//TODO THIS COULD BE DONE BETTER????
+			if(p2Shoot.isPressed())
+				Globals.player2.shootOn(diff);
+			else
+				Globals.player2.shootOff(diff);
 		}
 			
 		if(Globals.alien.isAlive())
