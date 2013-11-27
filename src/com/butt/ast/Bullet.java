@@ -34,7 +34,7 @@ public class Bullet extends Sprite
 		return index;
 	}
 	
-	public boolean checkHits()
+	public int checkHits()
 	{
 		if(hitCode==Globals.HITALLBUTPLAYER1)
 		{
@@ -43,7 +43,7 @@ public class Bullet extends Sprite
 					&& Globals.player2.getHit_y() < y && y < Globals.player2.getHit_y()+Globals.player2.getHitHeight())
 			{
 				Globals.player2.hit();
-				return true;
+				return 100;
 			}
 			
 			//check alien
@@ -51,7 +51,7 @@ public class Bullet extends Sprite
 					&& Globals.alien.getHit_yBody() < y && y < Globals.alien.getHit_yBody()+Globals.alien.getHitHeightBody())
 			{
 				Globals.alien.hit();
-				return true;
+				return 100;
 			}
 		}
 		else if(hitCode==Globals.HITALLBUTPLAYER2)
@@ -61,7 +61,7 @@ public class Bullet extends Sprite
 					&& Globals.player1.getHit_y() < y && y < Globals.player1.getHit_y()+Globals.player1.getHitHeight())
 			{
 				Globals.player1.hit();
-				return true;
+				return 100;
 			}
 			
 			//check alien
@@ -69,7 +69,7 @@ public class Bullet extends Sprite
 					&& Globals.alien.getHit_yBody() < y && y < Globals.alien.getHit_yBody()+Globals.alien.getHitHeightBody())
 			{
 				Globals.alien.hit();
-				return true;
+				return 100;
 			}
 		}
 		else if(hitCode==Globals.HITPLAYER1N2)
@@ -79,7 +79,7 @@ public class Bullet extends Sprite
 					&& Globals.player2.getHit_y() < y && y < Globals.player2.getHit_y()+Globals.player2.getHitHeight())
 			{
 				Globals.player2.hit();
-				return true;
+				return 1;
 			}
 			
 			//check player1
@@ -87,9 +87,9 @@ public class Bullet extends Sprite
 					&& Globals.player1.getHit_y() < y && y < Globals.player1.getHit_y()+Globals.player1.getHitHeight())
 			{
 				Globals.player1.hit();
-				return true;
+				return 1;
 			}
 		}
-		return false;
+		return 0;
 	}
 }

@@ -26,6 +26,7 @@ public class Globals
 	public static final String alienBullet="images/alienBullet.png";
 	public static final String gravityImg="images/gravity.png";
 	
+	public static int level=1;
 	
 	public static Player player1;
 	public static Player player2;

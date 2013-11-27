@@ -1,12 +1,11 @@
 package com.butt.ast;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
-import java.awt.image.BufferedImage;
 import java.awt.image.BufferedImageOp;
 import java.util.ArrayList;
-import java.util.List;
 
 //contains the player's ship
 public class Player extends Sprite
@@ -31,6 +30,9 @@ public class Player extends Sprite
 	private int spawnTime;
 	private double xSpawn;
 	private double ySpawn;
+	private int xscoreLoc;
+	private int score;
+	private Color scoreColor;
 	
 	public Player(String imgLoc, String bullet)
 	{
@@ -46,9 +48,10 @@ public class Player extends Sprite
 		spawnTime=10000;//swt spawntime to two seconds
 		bullets=new ArrayList<Bullet>();
 		burstWait=false;
+		score=0;
 	}
 	
-	public Player(String imgLoc, String bullet, double xpos, double ypos, int hitCode)
+	public Player(String imgLoc, String bullet, double xpos, double ypos, int hitCode, int scoreLoc, Color scoreColor)
 	{
 		this(imgLoc, bullet);
 		x=xpos;
@@ -56,6 +59,8 @@ public class Player extends Sprite
 		xSpawn=xpos;
 		ySpawn=ypos;
 		this.hitCode=hitCode;
+		this.scoreColor=scoreColor;
+		xscoreLoc=scoreLoc;
 	}
 	
 	//player is accelerating
@@ -211,11 +216,13 @@ public class Player extends Sprite
 	
 	public void updateBullets()
 	{
+		int tmp=0;
 		//update bullet positions
 		for(int j=0; j<bullets.size(); j++)
 		{
-			if(bullets.get(j).checkHits())
+			if((tmp=bullets.get(j).checkHits())>0)
 			{
+				score+=tmp;
 				bullets.remove(j);
 			}
 			//if bullet has traveled greater than the width of the screen, then updatePosMax will be true
@@ -269,6 +276,9 @@ public class Player extends Sprite
 		for(Bullet tmp:bullets)
 			tmp.draw(g);
 			//g.drawImage(tmp.getImage(), ops, (int)tmp.get_x(), (int)tmp.get_y());
+		
+		g.setColor(scoreColor);
+		g.drawString(""+score, xscoreLoc, 25);
 	}
 	
 	public void hit()
@@ -281,4 +291,15 @@ public class Player extends Sprite
 		vy=0;
 		spawnCnt=0;
 	}
+	
+	public void addScore(int val)
+	{
+		score+=val;
+	}
+	
+	public int getScore()
+	{
+		return score;
+	}
+	
 }

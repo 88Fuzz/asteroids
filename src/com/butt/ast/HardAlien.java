@@ -7,7 +7,7 @@ import java.awt.image.BufferedImageOp;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Alien extends Sprite
+public class HardAlien extends Sprite
 {
 	private double bulletWait;
 	private double bulletWaitCount;
@@ -19,7 +19,7 @@ public class Alien extends Sprite
 	private int spawnCnt;
 	private int spawnTime;
 	
-	public Alien(String imgLoc, String bullet)
+	public HardAlien(String imgLoc, String bullet)
 	{
 		super(imgLoc);
 		bulletImg=bullet;
@@ -34,7 +34,7 @@ public class Alien extends Sprite
 		alive=false;
 	}
 	
-	public Alien(String imgLoc, String bullet, int hitCode)
+	public HardAlien(String imgLoc, String bullet, int hitCode)
 	{
 		this(imgLoc, bullet);
 		this.hitCode=hitCode;
