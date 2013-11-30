@@ -52,6 +52,7 @@ public class Main extends GameWindow// implements KeyListener
 				Globals.HITALLBUTPLAYER2, Globals.WIDTH/100*99, Color.YELLOW);
 		
 		Globals.alien = new Alien(Globals.alienShip, Globals.alienBullet, Globals.HITPLAYER1N2);
+		Globals.ralien = new HardAlien(Globals.ralienShip, Globals.ralienBullet, Globals.HITPLAYER1N2);
 		
 		Globals.gravity = new Gravity(Globals.gravityImg);
 	}
@@ -233,6 +234,7 @@ public class Main extends GameWindow// implements KeyListener
 		Globals.player2.draw(g);
 		
 		Globals.alien.draw(g);
+		Globals.ralien.draw(g);
 		Globals.gravity.draw(g);
 	}
 	
@@ -291,6 +293,16 @@ public class Main extends GameWindow// implements KeyListener
 		else//do spawn checking stuff
 		{
 			Globals.alien.checkSpawn(diff);
+		}
+		
+		if(Globals.ralien.isAlive())
+		{
+			Globals.ralien.updatePos();
+			Globals.ralien.checkEdges();
+		}
+		else//do spawn checking stuff
+		{
+			Globals.ralien.checkSpawn(diff);
 		}
 		
 		if(Globals.player1.isAlive())

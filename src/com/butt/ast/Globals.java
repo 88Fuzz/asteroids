@@ -25,12 +25,15 @@ public class Globals
 	public static final String alienShip="images/alien.png";
 	public static final String alienBullet="images/alienBullet.png";
 	public static final String gravityImg="images/gravity.png";
+	public static final String ralienShip="images/ralien.png";
+	public static final String ralienBullet="images/ralienBullet.png";
 	
 	public static int level=1;
 	
 	public static Player player1;
 	public static Player player2;
 	public static Alien alien;
+	public static HardAlien ralien;
 	public static Gravity gravity;
 	
 	//hit detection codes
