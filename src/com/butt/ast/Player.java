@@ -4,8 +4,13 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
+import java.awt.image.BufferedImage;
 import java.awt.image.BufferedImageOp;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+
+import javax.imageio.ImageIO;
 
 //contains the player's ship
 public class Player extends Sprite
@@ -25,6 +30,7 @@ public class Player extends Sprite
 	private int bulletDelayDiff;
 	private int burstDelayDiff;
 	private String bulletImg;
+	private BufferedImage lifeImg;
 	private boolean burstWait;
 	private int spawnCnt;
 	private int spawnTime;
@@ -33,8 +39,11 @@ public class Player extends Sprite
 	private int xscoreLoc;
 	private int score;
 	private Color scoreColor;
+	private boolean neverAlive;
+	private int lives;
+	private boolean showScore;
 	
-	public Player(String imgLoc, String bullet)
+	public Player(String imgLoc, String bullet, String imgLife)
 	{
 		super(imgLoc);
 		bulletImg=bullet;
@@ -48,12 +57,23 @@ public class Player extends Sprite
 		spawnTime=10000;//swt spawntime to two seconds
 		bullets=new ArrayList<Bullet>();
 		burstWait=false;
+		neverAlive=false;
+		showScore=true;
 		score=0;
+		lives=3;
+		
+		try
+		{
+			lifeImg=ImageIO.read(new File(imgLife));
+		}
+		catch (IOException e) {	}
 	}
 	
-	public Player(String imgLoc, String bullet, double xpos, double ypos, int hitCode, int scoreLoc, Color scoreColor)
+	public Player(String imgLoc, String bullet, double xpos, double ypos, 
+					int hitCode, int scoreLoc, Color scoreColor,
+					String imgLife)
 	{
-		this(imgLoc, bullet);
+		this(imgLoc, bullet, imgLife);
 		x=xpos;
 		y=ypos;
 		xSpawn=xpos;
@@ -61,6 +81,12 @@ public class Player extends Sprite
 		this.hitCode=hitCode;
 		this.scoreColor=scoreColor;
 		xscoreLoc=scoreLoc;
+	}
+	
+	public void setNeverAlive()
+	{
+		neverAlive=true;
+		showScore=false;
 	}
 	
 	//player is accelerating
@@ -267,29 +293,47 @@ public class Player extends Sprite
 	public void draw(Graphics2D g)
 	{
 		BufferedImageOp ops = null;
-		AffineTransform tx=AffineTransform.getRotateInstance(Math.toRadians(rotate), img.getWidth()/2, img.getHeight()/2);
+		AffineTransform tx=AffineTransform.getRotateInstance(Math.toRadians(rotate), 
+				img.getWidth()/2, img.getHeight()/2);
+		AffineTransform tx2;
 		AffineTransformOp op=new AffineTransformOp(tx,AffineTransformOp.TYPE_BILINEAR);
+		int i;
 		
-		if(alive)
+		if(alive && !neverAlive)
 			g.drawImage(op.filter(img, null), ops, (int)Math.round(x), (int)Math.round(y));
 		
 		for(Bullet tmp:bullets)
 			tmp.draw(g);
 			//g.drawImage(tmp.getImage(), ops, (int)tmp.get_x(), (int)tmp.get_y());
 		
-		g.setColor(scoreColor);
-		g.drawString(""+score, xscoreLoc, 25);
+		if(showScore)
+		{
+			g.setColor(scoreColor);
+			g.drawString(""+score, xscoreLoc, 25);
+			
+			tx2=AffineTransform.getRotateInstance(0, img.getWidth()/2, img.getHeight()/2);
+			op=new AffineTransformOp(tx2,AffineTransformOp.TYPE_BILINEAR);
+			
+			for(i=0; i<lives; i++)
+			{
+				g.drawImage(op.filter(lifeImg, null), ops, 
+						xscoreLoc+(lifeImg.getWidth()+lifeImg.getWidth()/2)*i, 35);
+			}
+		}
 	}
 	
 	public void hit()
 	{
 		alive=false;
+		lives--;
 		x=xSpawn;
 		y=ySpawn;
 		rotate=0;
 		vx=0;
 		vy=0;
 		spawnCnt=0;
+		if(lives==0)			
+			neverAlive=true;
 	}
 	
 	public void addScore(int val)
@@ -302,4 +346,8 @@ public class Player extends Sprite
 		return score;
 	}
 	
+	public boolean isAlive()
+	{
+		return (!neverAlive && alive); 
+	}
 }

@@ -27,6 +27,9 @@ public class Main extends GameWindow// implements KeyListener
 	private GameAction p2RotateR;
 	private GameAction p1Shoot;
 	private GameAction p2Shoot;
+	private GameAction selDown;
+	private GameAction select;
+	private GameAction selUp;
 	
 	//private Alien alien;//WILL NEED TO BE CHANGED
 	
@@ -46,16 +49,16 @@ public class Main extends GameWindow// implements KeyListener
 	{
 		Globals.player1=new Player(Globals.p1Img, Globals.p1Bullet, 
 				(double)Globals.WIDTH/2-Globals.WIDTH/4, (double)Globals.HEIGHT/2, 
-				Globals.HITALLBUTPLAYER1, Globals.WIDTH/100, Color.WHITE);
+				Globals.HITALLBUTPLAYER1, Globals.WIDTH/100, Color.WHITE, Globals.p1life);
 		Globals.player2=new Player(Globals.p2Img, Globals.p2Bullet, 
 				(double)Globals.WIDTH/2+Globals.WIDTH/4, (double)Globals.HEIGHT/2, 
-				Globals.HITALLBUTPLAYER2, Globals.WIDTH/100*99, Color.YELLOW);
+				Globals.HITALLBUTPLAYER2, Globals.WIDTH/100*99, Color.YELLOW, Globals.p2life);
 		
 		Globals.alien = new Alien(Globals.alienShip, Globals.alienBullet, Globals.HITPLAYER1N2);
-		Globals.ralien = new HardAlien(Globals.ralienShip, Globals.ralienBullet, Globals.HITPLAYER1N2);
+		Globals.ralien = new HardAlien(Globals.ralienShip, Globals.ralienBullet, Globals.HITPLAYER1N2NALIEN);
 		
 		Globals.gravity = new Gravity(Globals.gravityImg);
-		Globals.ast = new Asteroids(Globals.bigAst); 
+		Globals.ast = new Asteroids(Globals.bigAst);
 	}
 	
 	//initializes keyboard inputs for the game actions
@@ -71,8 +74,11 @@ public class Main extends GameWindow// implements KeyListener
 		p2RotateR=new GameAction("rotate right");
 		p2Shoot=new GameAction("shoot");
 		
+		selUp=new GameAction("up", GameAction.DETECT_INITIAL_ONLY);
+		selDown=new GameAction("down", GameAction.DETECT_INITIAL_ONLY);
+		select=new GameAction("select");
 		
-		inMan.mapActToKey(p1Thrust, KeyEvent.VK_W);
+		/*inMan.mapActToKey(p1Thrust, KeyEvent.VK_W);
 		inMan.mapActToKey(p1RotateL, KeyEvent.VK_A);
 		inMan.mapActToKey(p1RotateR, KeyEvent.VK_D);
 		inMan.mapActToKey(p1Shoot, KeyEvent.VK_SPACE);
@@ -80,8 +86,11 @@ public class Main extends GameWindow// implements KeyListener
 		inMan.mapActToKey(p2Thrust, KeyEvent.VK_UP);
 		inMan.mapActToKey(p2RotateL, KeyEvent.VK_LEFT);
 		inMan.mapActToKey(p2RotateR, KeyEvent.VK_RIGHT);
-		inMan.mapActToKey(p2Shoot, KeyEvent.VK_CONTROL);
+		inMan.mapActToKey(p2Shoot, KeyEvent.VK_CONTROL);*/
 		
+		inMan.mapActToKey(selUp, KeyEvent.VK_UP);
+		inMan.mapActToKey(selDown, KeyEvent.VK_DOWN);
+		inMan.mapActToKey(select, KeyEvent.VK_ENTER);
 	}
 	
 	//main runloop
@@ -130,16 +139,57 @@ public class Main extends GameWindow// implements KeyListener
 				elapsedTime=System.currentTimeMillis()-currTime;
 				currTime+=elapsedTime;
 				
+				updateStartGraphicsPos(elapsedTime);
+				
 				g=getGraphics();
 				drawStart(g);
 				g.dispose();
 				update();
 				try
 				{
-					Thread.sleep(20);
+					Thread.sleep(100);
 				}
 				catch (InterruptedException ex) { }
 			}
+		}
+	}
+	
+	public void updateStartGraphicsPos(long diff)
+	{
+		if(selUp.isPressed())
+		{
+			Globals.optionsNum-=1;
+			if(Globals.optionsNum<0)
+				Globals.optionsNum=1;
+		}
+		
+		if(selDown.isPressed())
+		{
+			Globals.optionsNum+=1;
+			Globals.optionsNum=Globals.optionsNum%2;
+		}
+		
+		if(select.isPressed())
+		{
+			if(Globals.optionsNum==0)//one player
+			{
+				Globals.player2.setNeverAlive();
+				Globals.g_play=Globals.PLAY;
+			}
+			else//two player
+			{
+				Globals.g_play=Globals.PLAY;
+			}
+			
+			inMan.mapActToKey(p1Thrust, KeyEvent.VK_W);
+			inMan.mapActToKey(p1RotateL, KeyEvent.VK_A);
+			inMan.mapActToKey(p1RotateR, KeyEvent.VK_D);
+			inMan.mapActToKey(p1Shoot, KeyEvent.VK_SPACE);
+			
+			inMan.mapActToKey(p2Thrust, KeyEvent.VK_UP);
+			inMan.mapActToKey(p2RotateL, KeyEvent.VK_LEFT);
+			inMan.mapActToKey(p2RotateR, KeyEvent.VK_RIGHT);
+			inMan.mapActToKey(p2Shoot, KeyEvent.VK_CONTROL);
 		}
 	}
 	
@@ -165,7 +215,7 @@ public class Main extends GameWindow// implements KeyListener
 		{
 			g.setColor(Color.YELLOW);
 		}
-		g.drawString("Play Game", wOffset, hOffset);
+		g.drawString("One player", wOffset, hOffset);
 		hOffset+=titleFont/3;
 		if(Globals.optionsNum==0)
 		{
@@ -177,7 +227,7 @@ public class Main extends GameWindow// implements KeyListener
 		{
 			g.setColor(Color.YELLOW);
 		}
-		g.drawString("option2", wOffset, hOffset);
+		g.drawString("Two player", wOffset, hOffset);
 		hOffset+=titleFont/3;
 		if(Globals.optionsNum==1)
 		{
@@ -185,7 +235,7 @@ public class Main extends GameWindow// implements KeyListener
 		}
 		
 		
-		if(Globals.optionsNum==2)
+		/*if(Globals.optionsNum==2)
 		{
 			g.setColor(Color.YELLOW);
 		}
@@ -218,7 +268,7 @@ public class Main extends GameWindow// implements KeyListener
 		if(Globals.optionsNum==4)
 		{
 			g.setColor(Color.WHITE);
-		}
+		}*/
 		
 	}
 	
@@ -237,16 +287,24 @@ public class Main extends GameWindow// implements KeyListener
 		Globals.alien.draw(g);
 		Globals.ralien.draw(g);
 		Globals.gravity.draw(g);
-		Globals.ast.draw(g); 
+		
+		Globals.ast.draw(g);
 	}
 	
 	//checks if keys are pressed and takes the actions if keys are pressed
 	public void updateGraphicsPos(long diff)
 	{
 		
+		if(Globals.ast.isAlive())
+		{
+			Globals.ast.updatePos();
+			Globals.ast.checkEdges();
+		}
+
+		
 		if(Globals.gravity.isAlive())
 		{
-			Globals.gravity.moveShipes(diff);
+			Globals.gravity.moveShips(diff);
 		}
 		
 		if(Globals.player1.isAlive())
@@ -291,12 +349,6 @@ public class Main extends GameWindow// implements KeyListener
 		{
 			Globals.alien.updatePos();
 			Globals.alien.checkEdges();
-		}
-		
-		if(Globals.ast.isAlive())
-		{
-			Globals.ast.updatePos();
-			Globals.ast.checkEdges();
 		}
 		else//do spawn checking stuff
 		{

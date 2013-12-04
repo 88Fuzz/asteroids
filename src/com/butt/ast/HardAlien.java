@@ -29,4 +29,74 @@ public class HardAlien extends Alien
 		this(imgLoc, bullet);
 		this.hitCode=hitCode;
 	}
+	
+	public void updatePos()
+	{
+		double tmpDist=Math.sqrt(vx*vx+vy*vy);
+		double tmpAngle;
+		double dx;
+		double dy;
+		
+		x+=vx;
+		y+=vy;
+		distCount+=tmpDist;
+		bulletWaitCount+=tmpDist;
+		
+		if(bulletWaitCount>bulletWait)
+		{
+			genBulletDist();
+			
+			if(Globals.player1.isAlive())
+			{
+				//find angle between alien and player1
+				dx=x-Globals.player1.get_x();
+				dy=y-(Globals.player1.get_y()+Globals.player1.getHeight()/2);
+				tmpAngle=-Math.toDegrees(Math.atan(dx/dy));
+			
+				if(dy<0)
+					tmpAngle=-(180-tmpAngle);
+
+			
+			bullets.add(new Bullet(bulletImg, x, y,
+						img.getWidth()/2, 0, 
+						vVelocity, tmpAngle, bullets.size()+1, hitCode));
+			}
+			
+			if(Globals.player2.isAlive())
+			{
+				dx=x-Globals.player2.get_x();
+				dy=y-(Globals.player2.get_y()+Globals.player2.getHeight()/2);
+				tmpAngle=-Math.toDegrees(Math.atan(dx/dy));
+			
+				if(dy<0)
+					tmpAngle=-(180-tmpAngle);
+			
+				bullets.add(new Bullet(bulletImg, x, y,
+						img.getWidth()/2, 0, 
+						vVelocity, tmpAngle, bullets.size()+1, hitCode));
+			}
+			
+			if(Globals.ralien.isAlive())
+			{
+				dx=x-Globals.ralien.get_x();
+				dy=y-(Globals.ralien.get_y()+Globals.ralien.getHeight()/2);
+				tmpAngle=-Math.toDegrees(Math.atan(dx/dy));
+			
+				if(dy<0)
+					tmpAngle=-(180-tmpAngle);
+			
+				bullets.add(new Bullet(bulletImg, x, y,
+						img.getWidth()/2, 0, 
+						vVelocity, tmpAngle, bullets.size()+1, hitCode));
+			}
+		}
+		
+		if(distCount>dist)
+		{
+			genDir();
+			genDist();
+		}
+		
+		updateBullets();
+	}
 }

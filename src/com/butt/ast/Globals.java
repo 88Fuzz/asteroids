@@ -14,7 +14,7 @@ public class Globals
 	public static boolean g_gravityEN=false;
 	public static boolean g_gravityObj=false;
 	public static boolean g_gravityShow=false;
-	public static int g_play=PLAY;
+	public static int g_play=START;
 	
 	public static final String p1Img="images/player1.png";
 	public static final String p2Img="images/player2.png";
@@ -27,7 +27,8 @@ public class Globals
 	public static final String gravityImg="images/gravity.png";
 	public static final String ralienShip="images/ralien.png";
 	public static final String ralienBullet="images/ralienBullet.png";
-	
+	public static final String p1life="images/player1life.png";
+	public static final String p2life="images/player2life.png";
 	
 	public static int level=1;
 	
@@ -36,12 +37,13 @@ public class Globals
 	public static Alien alien;
 	public static HardAlien ralien;
 	public static Gravity gravity;
-	public static Asteroids ast; 
+	public static Asteroids ast;
 	
 	//hit detection codes
 	public static final int HITALLBUTPLAYER1=1;
 	public static final int HITALLBUTPLAYER2=2;
 	public static final int HITPLAYER1N2=3;
+	public static final int HITPLAYER1N2NALIEN=4;
 	
 	//controls which option should be high-lighted yellow
 	public static int optionsNum=0;

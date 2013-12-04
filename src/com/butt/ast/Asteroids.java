@@ -26,7 +26,6 @@ public class Asteroids extends Sprite
 		setxy();
 		genDir(); 
 		alive=true;
-		System.out.println("X coordinate is" + x); 
 	}
 	
 	public void genDir()
@@ -35,7 +34,6 @@ public class Asteroids extends Sprite
 		
 		vx=maxSpeed*Math.sin(Math.toRadians(rotate));
 		vy=-maxSpeed*Math.cos(Math.toRadians(rotate));
-		System.out.println(vx);
 	}
 	
 	public void updatePos()
@@ -94,9 +92,7 @@ public class Asteroids extends Sprite
 		AffineTransformOp op=new AffineTransformOp(tx,AffineTransformOp.TYPE_BILINEAR);
 		
 		if(alive)
-			g.drawImage(op.filter(img, null), ops, (int)Math.round(x), (int)Math.round(y));
-		System.out.println(alive); 
-		
+			g.drawImage(op.filter(img, null), ops, (int)Math.round(x), (int)Math.round(y));		
 	}
 	
 	//gets the x position of hitbox

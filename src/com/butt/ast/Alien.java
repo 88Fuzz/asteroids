@@ -9,13 +9,13 @@ import java.util.Random;
 
 public class Alien extends Sprite
 {
-	private double bulletWait;
-	private double bulletWaitCount;
-	private String bulletImg;
+	protected double bulletWait;
+	protected double bulletWaitCount;
+	protected String bulletImg;
 	private Random generator;
-	private int dist;
-	private double distCount;
-	private ArrayList<Bullet> bullets;
+	protected int dist;
+	protected double distCount;
+	protected ArrayList<Bullet> bullets;
 	private int spawnCnt;
 	private int spawnTime;
 	

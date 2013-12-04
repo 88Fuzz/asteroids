@@ -5,6 +5,8 @@ public class Gravity extends Sprite
 	//private boolean enable;
 	private boolean visible;
 	private double gravityForce;
+	private int centerx;
+	private int centery;
 	
 	Gravity(String imgLoc)
 	{
@@ -15,6 +17,9 @@ public class Gravity extends Sprite
 		gravityForce=-.05;
 		x=Globals.WIDTH/2-15;
 		y=Globals.HEIGHT/2-15;
+		
+		centerx=Globals.WIDTH/2;
+		centery=Globals.HEIGHT/2;
 	}
 	
 	public void setAlive()
@@ -32,7 +37,7 @@ public class Gravity extends Sprite
 		return visible;
 	}
 	
-	public void moveShipes(long diff)
+	public void moveShips(long diff)
 	{
 		double dx;
 		double dy;
@@ -41,8 +46,8 @@ public class Gravity extends Sprite
 		{
 			if(Globals.player1.isAlive())
 			{
-				dx=x-Globals.player1.get_x();
-				dy=y-(Globals.player1.get_y()+Globals.player1.getHeight()/2);
+				dx=centerx-Globals.player1.get_x();
+				dy=centery-(Globals.player1.get_y()+Globals.player1.getHeight()/2);
 				tmpAngle=-Math.toDegrees(Math.atan(dx/dy));
 		
 				if(dy<0)
@@ -57,8 +62,8 @@ public class Gravity extends Sprite
 		
 			if(Globals.player2.isAlive())
 			{
-				dx=x-Globals.player2.get_x();
-				dy=y-(Globals.player2.get_y()+Globals.player2.getHeight()/2);
+				dx=centerx-Globals.player2.get_x();
+				dy=centery-(Globals.player2.get_y()+Globals.player2.getHeight()/2);
 				tmpAngle=-Math.toDegrees(Math.atan(dx/dy));
 		
 				if(dy<0)
