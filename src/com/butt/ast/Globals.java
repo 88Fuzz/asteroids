@@ -28,6 +28,7 @@ public class Globals
 	public static final String ralienShip="images/ralien.png";
 	public static final String ralienBullet="images/ralienBullet.png";
 	
+	
 	public static int level=1;
 	
 	public static Player player1;
@@ -35,6 +36,7 @@ public class Globals
 	public static Alien alien;
 	public static HardAlien ralien;
 	public static Gravity gravity;
+	public static Asteroids ast; 
 	
 	//hit detection codes
 	public static final int HITALLBUTPLAYER1=1;

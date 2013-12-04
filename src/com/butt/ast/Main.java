@@ -55,6 +55,7 @@ public class Main extends GameWindow// implements KeyListener
 		Globals.ralien = new HardAlien(Globals.ralienShip, Globals.ralienBullet, Globals.HITPLAYER1N2);
 		
 		Globals.gravity = new Gravity(Globals.gravityImg);
+		Globals.ast = new Asteroids(Globals.bigAst); 
 	}
 	
 	//initializes keyboard inputs for the game actions
@@ -236,6 +237,7 @@ public class Main extends GameWindow// implements KeyListener
 		Globals.alien.draw(g);
 		Globals.ralien.draw(g);
 		Globals.gravity.draw(g);
+		Globals.ast.draw(g); 
 	}
 	
 	//checks if keys are pressed and takes the actions if keys are pressed
@@ -289,6 +291,12 @@ public class Main extends GameWindow// implements KeyListener
 		{
 			Globals.alien.updatePos();
 			Globals.alien.checkEdges();
+		}
+		
+		if(Globals.ast.isAlive())
+		{
+			Globals.ast.updatePos();
+			Globals.ast.checkEdges();
 		}
 		else//do spawn checking stuff
 		{
