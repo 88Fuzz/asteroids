@@ -19,8 +19,8 @@ public class Gravity extends Sprite
 	{
 		super(imgLoc);
 		//enable=true;
-		alive=true;
-		visible=true;
+		alive=false;
+		visible=false;
 		killShips=true;
 		gravityForce=-.05;
 		x=Globals.WIDTH/2-15;

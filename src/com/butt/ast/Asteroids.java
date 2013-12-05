@@ -177,6 +177,7 @@ public class Asteroids extends Sprite
 	
 	public static void addast(int astcount)
 	{
+		Globals.asts.clear();
 		for (int i = 0; i < astcount; i++){
 			Globals.asts.add(new Asteroids(Globals.bigAst));
 			}
