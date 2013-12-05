@@ -20,6 +20,7 @@ public class Player extends Sprite
 	public static final int bulletDelay=75;
 	public static final int burstDelay=400;
 	private static final int MAXBULLETS=30;
+	private static final int SIDEHITWIDTH=5;
 	private static final int HITWIDTH=20;
 	private static final int HITHEIGHT=20;
 	
@@ -42,6 +43,7 @@ public class Player extends Sprite
 	private boolean neverAlive;
 	private int lives;
 	private boolean showScore;
+	private int playerNum;
 	
 	public Player(String imgLoc, String bullet, String imgLife)
 	{
@@ -71,7 +73,7 @@ public class Player extends Sprite
 	
 	public Player(String imgLoc, String bullet, double xpos, double ypos, 
 					int hitCode, int scoreLoc, Color scoreColor,
-					String imgLife)
+					String imgLife, int player)
 	{
 		this(imgLoc, bullet, imgLife);
 		x=xpos;
@@ -81,6 +83,7 @@ public class Player extends Sprite
 		this.hitCode=hitCode;
 		this.scoreColor=scoreColor;
 		xscoreLoc=scoreLoc;
+		playerNum=player;
 	}
 	
 	public void setNeverAlive()
@@ -236,6 +239,17 @@ public class Player extends Sprite
 		x+=vx;
 		y+=vy;
 		
+		fix this
+		if(playerNum==1 && Globals.player2.isAlive()
+				&& Globals.player2.getHit_x() < x+SIDEHITWIDTH 
+				&& x < Globals.player2.getHitWidthSum()//check the x coordinates
+				&& Globals.player2.getHit_y() < y+HITHEIGHT
+				&& y < Globals.player2.getHitHeightSum())
+		{
+			Globals.player2.hit();
+			hit();
+		}
+		
 		//update bullet positions
 		updateBullets();
 	}
@@ -260,13 +274,13 @@ public class Player extends Sprite
 	//gets the x position of hitbox
 	public int getHit_x()
 	{
-		return (int)Math.round(x)+5;
+		return (int)Math.round(x)+SIDEHITWIDTH;
 	}
 	
 	//gets the y position of hitbox
 	public int getHit_y()
 	{
-		return (int)Math.round(y)+5;
+		return (int)Math.round(y)+SIDEHITWIDTH;
 	}
 	
 	//return hitbox width
@@ -275,10 +289,20 @@ public class Player extends Sprite
 		return HITWIDTH;
 	}
 	
+	public int getHitWidthSum()
+	{
+		return HITWIDTH+getHit_x(); 
+	}
+	
 	//return hitbox height
 	public int getHitHeight()
 	{
 		return HITHEIGHT;
+	}
+	
+	public int getHitHeightSum()
+	{
+		return HITHEIGHT+getHit_y();
 	}
 	
 	public void checkSpawn(long diff)

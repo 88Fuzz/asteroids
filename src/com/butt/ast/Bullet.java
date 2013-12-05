@@ -4,6 +4,7 @@ public class Bullet extends Sprite
 {
 	private int index;
 	private double dist;
+	private int radius;
 	public Bullet(String imgLoc, double xPos, double yPos, double xWidthHalf, double yWidthHalf, double vShip, double rotation, int index, int hitCode)
 	{
 		super(imgLoc);
@@ -13,6 +14,7 @@ public class Bullet extends Sprite
 		maxSpeed=8;
 		vx=(maxSpeed+vShip)*Math.sin(Math.toRadians(rotation));
 		vy=(maxSpeed+vShip)*-Math.cos(Math.toRadians(rotation));
+		radius=img.getWidth();
 		
 		this.index=index;
 		this.hitCode=hitCode;
@@ -39,9 +41,10 @@ public class Bullet extends Sprite
 		if(hitCode==Globals.HITPLAYER1N2)
 		{
 			//check player2
-			if(Globals.player2.isAlive() && Globals.player2.getHit_x() < x 
+			if(Globals.player2.isAlive()
+					&& Globals.player2.getHit_x() < x+radius 
 					&& x < Globals.player2.getHit_x()+Globals.player2.getHitWidth()//check the x coordinates
-					&& Globals.player2.getHit_y() < y 
+					&& Globals.player2.getHit_y() < y+radius
 					&& y < Globals.player2.getHit_y()+Globals.player2.getHitHeight())
 			{
 				Globals.player2.hit();
@@ -49,9 +52,10 @@ public class Bullet extends Sprite
 			}
 			
 			//check player1
-			if(Globals.player1.isAlive() && Globals.player1.getHit_x() < x 
+			if(Globals.player1.isAlive() 
+					&& Globals.player1.getHit_x() < x+radius
 					&& x < Globals.player1.getHit_x()+Globals.player1.getHitWidth()//check the x coordinates
-					&& Globals.player1.getHit_y() < y 
+					&& Globals.player1.getHit_y() < y+radius
 					&& y < Globals.player1.getHit_y()+Globals.player1.getHitHeight())
 			{
 				Globals.player1.hit();
@@ -61,9 +65,10 @@ public class Bullet extends Sprite
 		else if(hitCode==Globals.HITPLAYER1N2NALIEN)
 		{
 			//check player2
-			if(Globals.player2.isAlive() && Globals.player2.getHit_x() < x 
+			if(Globals.player2.isAlive() 
+					&& Globals.player2.getHit_x() < x+radius
 					&& x < Globals.player2.getHit_x()+Globals.player2.getHitWidth()//check the x coordinates
-					&& Globals.player2.getHit_y() < y 
+					&& Globals.player2.getHit_y() < y+radius
 					&& y < Globals.player2.getHit_y()+Globals.player2.getHitHeight())
 			{
 				Globals.player2.hit();
@@ -71,9 +76,10 @@ public class Bullet extends Sprite
 			}
 			
 			//check player1
-			if(Globals.player1.isAlive() && Globals.player1.getHit_x() < x 
+			if(Globals.player1.isAlive() 
+					&& Globals.player1.getHit_x() < x+radius
 					&& x < Globals.player1.getHit_x()+Globals.player1.getHitWidth()//check the x coordinates
-					&& Globals.player1.getHit_y() < y 
+					&& Globals.player1.getHit_y() < y+radius
 					&& y < Globals.player1.getHit_y()+Globals.player1.getHitHeight())
 			{
 				Globals.player1.hit();
@@ -81,9 +87,10 @@ public class Bullet extends Sprite
 			}
 			
 			//check alien
-			if(Globals.alien.isAlive() && Globals.alien.getHit_xBody() < x 
+			if(Globals.alien.isAlive() 
+					&& Globals.alien.getHit_xBody() < x+radius
 					&& x < Globals.alien.getHit_xBody()+Globals.alien.getHitWidthBody()//check the x coordinates
-					&& Globals.alien.getHit_yBody() < y 
+					&& Globals.alien.getHit_yBody() < y+radius
 					&& y < Globals.alien.getHit_yBody()+Globals.alien.getHitHeightBody())
 			{
 				Globals.alien.hit();
@@ -95,9 +102,11 @@ public class Bullet extends Sprite
 			if(hitCode==Globals.HITALLBUTPLAYER1)
 			{
 				//check player2
-				if(Globals.player2.isAlive() && Globals.player2.getHit_x() < x 
+				if(Globals.player2.isAlive() 
+						&& Globals.player2.getHit_x() < x+radius
 						&& x < Globals.player2.getHit_x()+Globals.player2.getHitWidth()//check the x coordinates
-						&& Globals.player2.getHit_y() < y && y < Globals.player2.getHit_y()+Globals.player2.getHitHeight())
+						&& Globals.player2.getHit_y() < y+radius 
+						&& y < Globals.player2.getHit_y()+Globals.player2.getHitHeight())
 				{
 					Globals.player2.hit();
 					return 100;
@@ -105,9 +114,11 @@ public class Bullet extends Sprite
 			}
 			else//Globals.HITALLBUTPLAYER2
 			{
-				if(Globals.player1.isAlive() && Globals.player1.getHit_x() < x 
+				if(Globals.player1.isAlive() 
+						&& Globals.player1.getHit_x() < x +radius
 						&& x < Globals.player1.getHit_x()+Globals.player1.getHitWidth()//check the x coordinates
-						&& Globals.player1.getHit_y() < y && y < Globals.player1.getHit_y()+Globals.player1.getHitHeight())
+						&& Globals.player1.getHit_y() < y+radius 
+						&& y < Globals.player1.getHit_y()+Globals.player1.getHitHeight())
 				{
 					Globals.player1.hit();
 					return 100;
@@ -116,9 +127,9 @@ public class Bullet extends Sprite
 			
 			//check alien
 			if(Globals.alien.isAlive() 
-					&& Globals.alien.getHit_xBody() < x 
+					&& Globals.alien.getHit_xBody() < x+radius
 					&& x < Globals.alien.getHit_xBody()+Globals.alien.getHitWidthBody()//check the x coordinates
-					&& Globals.alien.getHit_yBody() < y 
+					&& Globals.alien.getHit_yBody() < y+radius
 					&& y < Globals.alien.getHit_yBody()+Globals.alien.getHitHeightBody())
 			{
 				Globals.alien.hit();
@@ -126,9 +137,10 @@ public class Bullet extends Sprite
 			}
 			
 			//Check ralien
-			if(Globals.ralien.isAlive() && Globals.ralien.getHit_xBody() < x 
+			if(Globals.ralien.isAlive() 
+					&& Globals.ralien.getHit_xBody() < x+radius 
 					&& x < Globals.ralien.getHit_xBody()+Globals.ralien.getHitWidthBody()//check the x coordinates
-					&& Globals.ralien.getHit_yBody() < y 
+					&& Globals.ralien.getHit_yBody() < y+radius
 					&& y < Globals.ralien.getHit_yBody()+Globals.ralien.getHitHeightBody())
 			{
 				Globals.ralien.hit();

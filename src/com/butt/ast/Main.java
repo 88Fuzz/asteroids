@@ -49,10 +49,10 @@ public class Main extends GameWindow// implements KeyListener
 	{
 		Globals.player1=new Player(Globals.p1Img, Globals.p1Bullet, 
 				(double)Globals.WIDTH/2-Globals.WIDTH/4, (double)Globals.HEIGHT/2, 
-				Globals.HITALLBUTPLAYER1, Globals.WIDTH/100, Color.WHITE, Globals.p1life);
+				Globals.HITALLBUTPLAYER1, Globals.WIDTH/100, Color.WHITE, Globals.p1life, 1);
 		Globals.player2=new Player(Globals.p2Img, Globals.p2Bullet, 
 				(double)Globals.WIDTH/2+Globals.WIDTH/4, (double)Globals.HEIGHT/2, 
-				Globals.HITALLBUTPLAYER2, Globals.WIDTH/100*99, Color.YELLOW, Globals.p2life);
+				Globals.HITALLBUTPLAYER2, Globals.WIDTH/100*99, Color.YELLOW, Globals.p2life, 2);
 		
 		Globals.alien = new Alien(Globals.alienShip, Globals.alienBullet, Globals.HITPLAYER1N2);
 		Globals.ralien = new HardAlien(Globals.ralienShip, Globals.ralienBullet, Globals.HITPLAYER1N2NALIEN);
