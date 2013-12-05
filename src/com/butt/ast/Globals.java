@@ -41,6 +41,7 @@ public class Globals
 	public static Gravity gravity;
 	//public static Asteroids ast;
 	public static ArrayList<Asteroids> asts;
+	public static ArrayList<Smallasteroids>smasts;
 	
 	//hit detection codes
 	public static final int HITALLBUTPLAYER1=1;

@@ -101,8 +101,7 @@ public class Asteroids extends Sprite
 		AffineTransform tx=AffineTransform.getRotateInstance(0, img.getWidth()/2, img.getHeight()/2);
 		AffineTransformOp op=new AffineTransformOp(tx,AffineTransformOp.TYPE_BILINEAR);
 		
-		if(alive)
-			g.drawImage(op.filter(img, null), ops, (int)Math.round(x), (int)Math.round(y));		
+		g.drawImage(op.filter(img, null), ops, (int)Math.round(x), (int)Math.round(y));		
 	}
 	
 	//gets the x position of hitbox
@@ -164,5 +163,12 @@ public class Asteroids extends Sprite
 	public double getcy()
 	{
 		return cy; 
+	}
+	
+	public static void addast(int astcount)
+	{
+		for (int i = 0; i < astcount; i++){
+			Globals.asts.add(new Asteroids(Globals.bigAst));
+			}
 	}
 }

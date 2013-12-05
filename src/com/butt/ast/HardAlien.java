@@ -28,6 +28,7 @@ public class HardAlien extends Alien
 	{
 		this(imgLoc, bullet);
 		this.hitCode=hitCode;
+		lives=1;
 	}
 	
 	public void updatePos()
@@ -98,5 +99,15 @@ public class HardAlien extends Alien
 		}
 		
 		updateBullets();
+	}
+	
+	public void hit()
+	{
+		alive=false;
+		genDirFirst();
+		genDist();
+		genBulletDist();
+		genPos();
+		genRespawnTime();
 	}
 }

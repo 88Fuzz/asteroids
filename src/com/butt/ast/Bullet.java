@@ -45,6 +45,7 @@ public class Bullet extends Sprite
 	
 	public int checkHits()
 	{
+		double d;
 		if(hitCode==Globals.HITPLAYER1N2)
 		{
 			//check player2
@@ -156,14 +157,28 @@ public class Bullet extends Sprite
 			
 			for(int i = 0; i < Globals.asts.size(); i++)
 			{ 
-				double d = Math.sqrt(((Globals.asts.get(i).getcx()-cx)*(Globals.asts.get(i).getcx()-cx))  + ((Globals.asts.get(i).getcy()-cy)*(Globals.asts.get(i).getcy()-cy))); 
+				d = Math.sqrt(((Globals.asts.get(i).getcx()-cx)*(Globals.asts.get(i).getcx()-cx))  + ((Globals.asts.get(i).getcy()-cy)*(Globals.asts.get(i).getcy()-cy))); 
 				if( d < (Globals.asts.get(i).getrad() + radius))
 				{
-					Globals.asts.get(i).hit(); 
+					for (int k = 0; k < 3; k++)
+					{
+                        Globals.smasts.add(new Smallasteroids(Globals.smallAst, Globals.asts.get(i).getcx(), Globals.asts.get(i).getcy()));
+                    }
 					Globals.asts.remove(i);
 					return 100;	
 				}
 			}
+			
+			for(int k = 0; k < Globals.smasts.size(); k++)
+			{ 
+				d = Math.sqrt(((Globals.smasts.get(k).getcx()-cx)*(Globals.smasts.get(k).getcx()-cx))  + ((Globals.smasts.get(k).getcy()-cy)*(Globals.smasts.get(k).getcy()-cy))); 
+				if( d < (Globals.smasts.get(k).getrad() + radius))
+				{	
+					Globals.smasts.remove(k);
+					return 100;	
+				}
+			}
+
 		}
 
 		return 0;

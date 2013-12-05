@@ -32,7 +32,7 @@ public class Main extends GameWindow// implements KeyListener
 	private GameAction select;
 	private GameAction selUp;
 	private GameAction pause;
-	private int astCount=3;
+	private int astcount=3;
 	private int levelNum;
 	
 	//private Alien alien;//WILL NEED TO BE CHANGED
@@ -64,11 +64,9 @@ public class Main extends GameWindow// implements KeyListener
 		Globals.gravity = new Gravity(Globals.gravityImg);
 		//Globals.ast = new Asteroids(Globals.bigAst);
 		Globals.asts = new ArrayList<Asteroids>();
+		Globals.smasts = new ArrayList<Smallasteroids>();
 		
-		for (int i = 0; i < astCount; i++){
-			Globals.asts.add(new Asteroids(Globals.bigAst));
-		}
-
+		Asteroids.addast(astcount);
 	}
 	
 	//initializes keyboard inputs for the game actions
@@ -159,10 +157,216 @@ public class Main extends GameWindow// implements KeyListener
 				update();
 				try
 				{
-					Thread.sleep(100);
+					Thread.sleep(80);
 				}
 				catch (InterruptedException ex) { }
 			}
+			else if(Globals.g_play==Globals.PAUSE)
+			{
+				elapsedTime=System.currentTimeMillis()-currTime;
+				currTime+=elapsedTime;
+				
+				updatePauseGraphicsPos(elapsedTime);
+				
+				g=getGraphics();
+				drawPause(g);
+				g.dispose();
+				update();
+				try
+				{
+					Thread.sleep(80);
+				}
+				catch (InterruptedException ex) { }
+			}
+		}
+	}
+	
+	public void drawPause(Graphics2D g)
+	{
+		int titleFont=Globals.WIDTH/10;
+		int optionFont=titleFont/7;
+		int hOffset=Globals.HEIGHT/10+titleFont;
+		int wOffset=Globals.WIDTH/100;
+		Window window=device.getFullScreenWindow();
+		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+		g.setColor(window.getBackground());
+		g.fillRect(0, 0, Globals.WIDTH, Globals.HEIGHT);
+		g.setColor(window.getForeground());
+		
+		g.setFont(new Font("dialog", Font.PLAIN, titleFont));
+		g.drawString("ASTEROIDS", wOffset, hOffset);
+		hOffset+=titleFont;
+		
+		//resume
+		g.setFont(new Font("dialog", Font.PLAIN, optionFont));
+		if(Globals.optionsNum==0)
+		{
+			g.setColor(Color.YELLOW);
+		}
+		g.drawString("Resume", wOffset, hOffset);
+		hOffset+=titleFont/3;
+		if(Globals.optionsNum==0)
+		{
+			g.setColor(Color.WHITE);
+		}
+		
+		//gravity
+		g.setFont(new Font("dialog", Font.PLAIN, optionFont));
+		if(Globals.optionsNum==1)
+		{
+			g.setColor(Color.YELLOW);
+		}
+		g.drawString("Gravity on", wOffset, hOffset);
+		hOffset+=titleFont/3;
+		if(Globals.optionsNum==1)
+		{
+			g.setColor(Color.WHITE);
+		}
+		
+		//visible gravity
+		if(Globals.optionsNum==2)
+		{
+			g.setColor(Color.YELLOW);
+		}
+		g.drawString("Gravity Ball Visible", wOffset, hOffset);
+		hOffset+=titleFont/3;
+		if(Globals.optionsNum==2)
+		{
+			g.setColor(Color.WHITE);
+		}
+		
+		//infinite lives
+		if(Globals.optionsNum==3)
+		{
+			g.setColor(Color.YELLOW);
+		}
+		g.drawString("Infinite lives", wOffset, hOffset);
+		hOffset+=titleFont/3;
+		if(Globals.optionsNum==3)
+		{
+			g.setColor(Color.WHITE);
+		}
+		
+		//number of asteroids
+		if(Globals.optionsNum==4)
+		{
+			g.setColor(Color.YELLOW);
+		}
+		g.drawString("Number of asteroids", wOffset, hOffset);
+		hOffset+=titleFont/3;
+		if(Globals.optionsNum==4)
+		{
+			g.setColor(Color.WHITE);
+		}
+		
+		//reset high score
+		if(Globals.optionsNum==5)
+		{
+			g.setColor(Color.YELLOW);
+		}
+		g.drawString("Reset high score", wOffset, hOffset);
+		hOffset+=titleFont/3;
+		if(Globals.optionsNum==5)
+		{
+			g.setColor(Color.WHITE);
+		}
+		
+		//save
+		if(Globals.optionsNum==6)
+		{
+			g.setColor(Color.YELLOW);
+		}
+		g.drawString("Save", wOffset, hOffset);
+		hOffset+=titleFont/3;
+		if(Globals.optionsNum==6)
+		{
+			g.setColor(Color.WHITE);
+		}
+		
+		//continue from save
+		if(Globals.optionsNum==7)
+		{
+			g.setColor(Color.YELLOW);
+		}
+		g.drawString("Continue from save", wOffset, hOffset);
+		hOffset+=titleFont/3;
+		if(Globals.optionsNum==7)
+		{
+			g.setColor(Color.WHITE);
+		}
+		
+		//starting level
+		if(Globals.optionsNum==8)
+		{
+			g.setColor(Color.YELLOW);
+		}
+		g.drawString("Start new level", wOffset, hOffset);
+		hOffset+=titleFont/3;
+		if(Globals.optionsNum==8)
+		{
+			g.setColor(Color.WHITE);
+		}
+		
+		//exit
+		if(Globals.optionsNum==9)
+		{
+			g.setColor(Color.YELLOW);
+		}
+		g.drawString("Exit", wOffset, hOffset);
+		hOffset+=titleFont/3;
+		if(Globals.optionsNum==9)
+		{
+			g.setColor(Color.WHITE);
+		}
+	}
+	
+	public void updatePauseGraphicsPos(long diff)
+	{
+		if(selUp.isPressed())
+		{
+			Globals.optionsNum-=1;
+			if(Globals.optionsNum<0)
+				Globals.optionsNum=9;
+		}
+		
+		if(selDown.isPressed())
+		{
+			Globals.optionsNum+=1;
+			Globals.optionsNum=Globals.optionsNum%10;
+		}
+		
+		if(select.isPressed())
+		{
+			if(Globals.optionsNum==0)
+			{
+				Globals.optionsNum=0;
+				inMan.mapActToKey(p1Thrust, KeyEvent.VK_W);
+				inMan.mapActToKey(p1RotateL, KeyEvent.VK_A);
+				inMan.mapActToKey(p1RotateR, KeyEvent.VK_D);
+				inMan.mapActToKey(p1Shoot, KeyEvent.VK_SPACE);
+				
+				inMan.mapActToKey(p2Thrust, KeyEvent.VK_UP);
+				inMan.mapActToKey(p2RotateL, KeyEvent.VK_LEFT);
+				inMan.mapActToKey(p2RotateR, KeyEvent.VK_RIGHT);
+				inMan.mapActToKey(p2Shoot, KeyEvent.VK_CONTROL);
+				Globals.g_play=Globals.PLAY;
+			}
+			else if(Globals.optionsNum==9)
+			{
+				Globals.g_play=Globals.KILL;
+			}
+			
+			/*if(Globals.optionsNum==0)//one player
+			{
+				Globals.player2.setNeverAlive();
+				Globals.g_play=Globals.PLAY;
+			}
+			else//two player
+			{
+				Globals.g_play=Globals.PLAY;
+			}*/
+			
+			
 		}
 	}
 	
@@ -202,6 +406,8 @@ public class Main extends GameWindow// implements KeyListener
 			inMan.mapActToKey(p2RotateL, KeyEvent.VK_LEFT);
 			inMan.mapActToKey(p2RotateR, KeyEvent.VK_RIGHT);
 			inMan.mapActToKey(p2Shoot, KeyEvent.VK_CONTROL);
+			
+			Globals.optionsNum=0;
 		}
 	}
 	
@@ -222,6 +428,7 @@ public class Main extends GameWindow// implements KeyListener
 		g.drawString("ASTEROIDS", wOffset, hOffset);
 		hOffset+=titleFont;
 		
+		//one player
 		g.setFont(new Font("dialog", Font.PLAIN, optionFont));
 		if(Globals.optionsNum==0)
 		{
@@ -234,7 +441,7 @@ public class Main extends GameWindow// implements KeyListener
 			g.setColor(Color.WHITE);
 		}
 		
-		
+		//two player
 		if(Globals.optionsNum==1)
 		{
 			g.setColor(Color.YELLOW);
@@ -304,6 +511,11 @@ public class Main extends GameWindow// implements KeyListener
 		for (int i = 0; i < Globals.asts.size(); i++){
 			Globals.asts.get(i).draw(g); 
 		}
+		
+		for (int k = 0; k < Globals.smasts.size(); k++){
+            Globals.smasts.get(k).draw(g);
+		}
+
 
 	}
 	
@@ -313,6 +525,7 @@ public class Main extends GameWindow// implements KeyListener
 		if(pause.isPressed())
 		{
 			Globals.g_play=Globals.PAUSE;
+			inMan.mapActToKey(selUp, KeyEvent.VK_UP);
 		}
 
 
@@ -324,6 +537,15 @@ public class Main extends GameWindow// implements KeyListener
 				Globals.asts.get(i).checkEdges();
 			}
 		}
+		
+		for (int i = 0; i < Globals.smasts.size(); i++){
+            if(Globals.smasts.get(i).isAlive())
+            {
+            Globals.smasts.get(i).updatePos();
+            Globals.smasts.get(i).checkEdges();
+            }
+		}
+
 		
 		if(Globals.gravity.isAlive())
 		{
@@ -407,5 +629,14 @@ public class Main extends GameWindow// implements KeyListener
 		{
 			Globals.player2.checkSpawn(diff);
 		}
+		
+		if (Globals.asts.size() == 0 && Globals.smasts.size() == 0)
+		{
+			Globals.level = Globals.level + 1;
+			astcount++;
+			Asteroids.addast(astcount);
+		}
+
+
 	}
 }

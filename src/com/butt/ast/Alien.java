@@ -18,6 +18,7 @@ public class Alien extends Sprite
 	protected ArrayList<Bullet> bullets;
 	private int spawnCnt;
 	private int spawnTime;
+	protected int lives;
 	
 	public Alien(String imgLoc, String bullet)
 	{
@@ -32,6 +33,7 @@ public class Alien extends Sprite
 		genPos();
 		genRespawnTime();
 		alive=false;
+		lives=3;
 	}
 	
 	public Alien(String imgLoc, String bullet, int hitCode)
@@ -287,11 +289,16 @@ public class Alien extends Sprite
 	
 	public void hit()
 	{
-		alive=false;
-		genDirFirst();
-		genDist();
-		genBulletDist();
-		genPos();
-		genRespawnTime();
+		lives--;
+		if(lives==0)
+		{
+			alive=false;
+			genDirFirst();
+			genDist();
+			genBulletDist();
+			genPos();
+			genRespawnTime();
+			lives=3;
+		}
 	}
 }
