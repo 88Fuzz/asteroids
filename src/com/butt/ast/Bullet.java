@@ -160,12 +160,9 @@ public class Bullet extends Sprite
 				d = Math.sqrt(((Globals.asts.get(i).getcx()-cx)*(Globals.asts.get(i).getcx()-cx))  + ((Globals.asts.get(i).getcy()-cy)*(Globals.asts.get(i).getcy()-cy))); 
 				if( d < (Globals.asts.get(i).getrad() + radius))
 				{
-					for (int k = 0; k < 3; k++)
-					{
-                        Globals.smasts.add(new Smallasteroids(Globals.smallAst, Globals.asts.get(i).getcx(), Globals.asts.get(i).getcy()));
-                    }
+					Globals.asts.get(i).spawnLittles();
 					Globals.asts.remove(i);
-					return 100;	
+					return 5;	
 				}
 			}
 			
@@ -175,7 +172,7 @@ public class Bullet extends Sprite
 				if( d < (Globals.smasts.get(k).getrad() + radius))
 				{	
 					Globals.smasts.remove(k);
-					return 100;	
+					return 5;	
 				}
 			}
 

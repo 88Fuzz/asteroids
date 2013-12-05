@@ -1,9 +1,14 @@
 package com.butt.ast;
 
+import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
+import java.awt.image.BufferedImageOp;
+
 public class Gravity extends Sprite
 {
 	//private boolean enable;
-	private boolean visible;
+	public boolean visible;
 	private double gravityForce;
 	private boolean killShips;
 	private int centerx;
@@ -14,7 +19,7 @@ public class Gravity extends Sprite
 	{
 		super(imgLoc);
 		//enable=true;
-		alive=false;
+		alive=true;
 		visible=true;
 		killShips=true;
 		gravityForce=-.05;
@@ -31,14 +36,31 @@ public class Gravity extends Sprite
 		alive=true;
 	}
 	
+	public void setAlive(boolean val)
+	{
+		alive= val;
+	}
+	
 	public void setVisible(boolean val)
 	{
-		visible=val;
+		visible= val;
 	}
 	
 	public boolean getVisible()
 	{
 		return visible;
+	}
+	
+	public void draw(Graphics2D g)
+	{
+		if ( visible == true)
+		{	
+		BufferedImageOp ops = null;
+		AffineTransform tx=AffineTransform.getRotateInstance(0, img.getWidth()/2, img.getHeight()/2);
+		AffineTransformOp op=new AffineTransformOp(tx,AffineTransformOp.TYPE_BILINEAR);
+		
+		g.drawImage(op.filter(img, null), ops, (int)Math.round(x), (int)Math.round(y));
+		}
 	}
 	
 	public void moveShips(long diff)
