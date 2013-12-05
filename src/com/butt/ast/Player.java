@@ -239,11 +239,11 @@ public class Player extends Sprite
 		x+=vx;
 		y+=vy;
 		
-		fix this
+		//TODO make this better
 		if(playerNum==1 && Globals.player2.isAlive()
-				&& Globals.player2.getHit_x() < x+SIDEHITWIDTH 
+				&& Globals.player2.getHit_x() < getHitWidthSum() 
 				&& x < Globals.player2.getHitWidthSum()//check the x coordinates
-				&& Globals.player2.getHit_y() < y+HITHEIGHT
+				&& Globals.player2.getHit_y() < getHitHeightSum()
 				&& y < Globals.player2.getHitHeightSum())
 		{
 			Globals.player2.hit();

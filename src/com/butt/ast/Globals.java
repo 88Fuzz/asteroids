@@ -1,5 +1,7 @@
 package com.butt.ast;
 
+import java.util.ArrayList;
+
 
 //All global variables are kept in here
 public class Globals
@@ -37,7 +39,8 @@ public class Globals
 	public static Alien alien;
 	public static HardAlien ralien;
 	public static Gravity gravity;
-	public static Asteroids ast;
+	//public static Asteroids ast;
+	public static ArrayList<Asteroids> asts;
 	
 	//hit detection codes
 	public static final int HITALLBUTPLAYER1=1;

@@ -16,6 +16,9 @@ public class Asteroids extends Sprite
 	private ArrayList<Bullet> bullets;
 	private int spawnCnt;
 	private int spawnTime;
+	private double cx; 
+	private double cy;
+	private double radius; 
 	
 	public Asteroids(String imgLoc)
 	{
@@ -26,6 +29,10 @@ public class Asteroids extends Sprite
 		setxy();
 		genDir(); 
 		alive=true;
+		radius = img.getWidth()/2;
+		cx = 0; 
+		cy = 0; 
+		
 	}
 	
 	public void genDir()
@@ -39,7 +46,10 @@ public class Asteroids extends Sprite
 	public void updatePos()
 	{
 		x+=vx;
-		y+=vy;		
+		y+=vy;
+		cx = x + radius; 
+		cy = y + radius; 
+		
 	}
 		
 	
@@ -121,7 +131,7 @@ public class Asteroids extends Sprite
 	
 	public void genPos()
 	{
-		x=Globals.WIDTH;
+		x= generator.nextInt(Globals.HEIGHT);
 		y=generator.nextInt(Globals.HEIGHT);
 	}
 	
@@ -132,12 +142,27 @@ public class Asteroids extends Sprite
 		alive=false;
 
 		genPos();
-
 	}
+	
 	
 	public void setxy()
 	{
 		x = generator.nextInt(Globals.WIDTH); 
 		y = generator.nextInt(Globals.HEIGHT);
+	}
+	
+	public double getrad()
+	{	
+		return radius; 
+	}
+	
+	public double getcx()
+	{
+		return cx; 
+	}
+	
+	public double getcy()
+	{
+		return cy; 
 	}
 }

@@ -4,7 +4,9 @@ public class Bullet extends Sprite
 {
 	private int index;
 	private double dist;
-	private int radius;
+	private double radius;
+	private double cx;
+	private double cy;
 	public Bullet(String imgLoc, double xPos, double yPos, double xWidthHalf, double yWidthHalf, double vShip, double rotation, int index, int hitCode)
 	{
 		super(imgLoc);
@@ -14,7 +16,9 @@ public class Bullet extends Sprite
 		maxSpeed=8;
 		vx=(maxSpeed+vShip)*Math.sin(Math.toRadians(rotation));
 		vy=(maxSpeed+vShip)*-Math.cos(Math.toRadians(rotation));
-		radius=img.getWidth();
+		radius=img.getWidth()/2;
+		cy=0;
+		cx=0;
 		
 		this.index=index;
 		this.hitCode=hitCode;
@@ -25,6 +29,9 @@ public class Bullet extends Sprite
 		x+=vx;
 		y+=vy;
 		dist+=Math.sqrt(vx*vx+vy*vy);
+		
+		cx=x+radius;
+		cy=y+radius;
 		
 		if(dist>Globals.WIDTH)
 			return true;
@@ -145,6 +152,17 @@ public class Bullet extends Sprite
 			{
 				Globals.ralien.hit();
 				return 100;	
+			}
+			
+			for(int i = 0; i < Globals.asts.size(); i++)
+			{ 
+				double d = Math.sqrt(((Globals.asts.get(i).getcx()-cx)*(Globals.asts.get(i).getcx()-cx))  + ((Globals.asts.get(i).getcy()-cy)*(Globals.asts.get(i).getcy()-cy))); 
+				if( d < (Globals.asts.get(i).getrad() + radius))
+				{
+					Globals.asts.get(i).hit(); 
+					Globals.asts.remove(i);
+					return 100;	
+				}
 			}
 		}
 

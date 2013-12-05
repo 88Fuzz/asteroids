@@ -45,8 +45,8 @@ public class InputManager implements KeyListener
 	public void keyPressed(KeyEvent e)
 	{
 		int keyCode=e.getKeyCode();
-		if(keyCode==KeyEvent.VK_ESCAPE)
-			Globals.g_play=Globals.KILL;
+		//if(keyCode==KeyEvent.VK_ESCAPE)
+		//	Globals.g_play=Globals.KILL;
 		
 		GameAction ga=getKeyAction(keyCode);
 		if(ga!=null)

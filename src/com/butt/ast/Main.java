@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.Window;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
 //initializes everything and stuff
 public class Main extends GameWindow// implements KeyListener
@@ -30,6 +31,9 @@ public class Main extends GameWindow// implements KeyListener
 	private GameAction selDown;
 	private GameAction select;
 	private GameAction selUp;
+	private GameAction pause;
+	private int astCount=3;
+	private int levelNum;
 	
 	//private Alien alien;//WILL NEED TO BE CHANGED
 	
@@ -58,7 +62,13 @@ public class Main extends GameWindow// implements KeyListener
 		Globals.ralien = new HardAlien(Globals.ralienShip, Globals.ralienBullet, Globals.HITPLAYER1N2NALIEN);
 		
 		Globals.gravity = new Gravity(Globals.gravityImg);
-		Globals.ast = new Asteroids(Globals.bigAst);
+		//Globals.ast = new Asteroids(Globals.bigAst);
+		Globals.asts = new ArrayList<Asteroids>();
+		
+		for (int i = 0; i < astCount; i++){
+			Globals.asts.add(new Asteroids(Globals.bigAst));
+		}
+
 	}
 	
 	//initializes keyboard inputs for the game actions
@@ -77,6 +87,7 @@ public class Main extends GameWindow// implements KeyListener
 		selUp=new GameAction("up", GameAction.DETECT_INITIAL_ONLY);
 		selDown=new GameAction("down", GameAction.DETECT_INITIAL_ONLY);
 		select=new GameAction("select");
+		pause=new GameAction("pause", GameAction.DETECT_INITIAL_ONLY);
 		
 		/*inMan.mapActToKey(p1Thrust, KeyEvent.VK_W);
 		inMan.mapActToKey(p1RotateL, KeyEvent.VK_A);
@@ -91,6 +102,7 @@ public class Main extends GameWindow// implements KeyListener
 		inMan.mapActToKey(selUp, KeyEvent.VK_UP);
 		inMan.mapActToKey(selDown, KeyEvent.VK_DOWN);
 		inMan.mapActToKey(select, KeyEvent.VK_ENTER);
+		inMan.mapActToKey(pause, KeyEvent.VK_ESCAPE);
 	}
 	
 	//main runloop
@@ -288,19 +300,30 @@ public class Main extends GameWindow// implements KeyListener
 		Globals.ralien.draw(g);
 		Globals.gravity.draw(g);
 		
-		Globals.ast.draw(g);
+		//Globals.ast.draw(g);
+		for (int i = 0; i < Globals.asts.size(); i++){
+			Globals.asts.get(i).draw(g); 
+		}
+
 	}
 	
 	//checks if keys are pressed and takes the actions if keys are pressed
 	public void updateGraphicsPos(long diff)
 	{
-		
-		if(Globals.ast.isAlive())
+		if(pause.isPressed())
 		{
-			Globals.ast.updatePos();
-			Globals.ast.checkEdges();
+			Globals.g_play=Globals.PAUSE;
 		}
 
+
+		
+		for (int i = 0; i < Globals.asts.size(); i++){
+			if(Globals.asts.get(i).isAlive())
+			{
+				Globals.asts.get(i).updatePos();
+				Globals.asts.get(i).checkEdges();
+			}
+		}
 		
 		if(Globals.gravity.isAlive())
 		{
