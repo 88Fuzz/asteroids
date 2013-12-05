@@ -9,6 +9,7 @@ import java.awt.image.BufferedImageOp;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.imageio.ImageIO;
 
@@ -41,7 +42,7 @@ public class Player extends Sprite
 	private int score;
 	private Color scoreColor;
 	private boolean neverAlive;
-	private int lives;
+	public int lives;
 	private boolean showScore;
 	private int playerNum;
 	
@@ -56,19 +57,24 @@ public class Player extends Sprite
 		bulletDelayDiff=bulletDelay;
 		burstDelayDiff=burstDelay;
 		numBulletsBurst=0;
-		spawnTime=10000;//swt spawntime to two seconds
+		spawnTime=1000;//set spawntime to two seconds
 		bullets=new ArrayList<Bullet>();
 		burstWait=false;
 		neverAlive=false;
 		showScore=true;
 		score=0;
-		lives=3;
+		lives= 3;
 		
 		try
 		{
 			lifeImg=ImageIO.read(new File(imgLife));
 		}
 		catch (IOException e) {	}
+	}
+	
+	public void increaseScore(int val)
+	{
+		score+=val;
 	}
 	
 	public Player(String imgLoc, String bullet, double xpos, double ypos, 
@@ -90,6 +96,7 @@ public class Player extends Sprite
 	{
 		neverAlive=true;
 		showScore=false;
+		lives=0;
 	}
 	
 	//player is accelerating
@@ -108,6 +115,11 @@ public class Player extends Sprite
 			vy=maxSpeed;
 		else if(vy<-maxSpeed)
 			vy=-maxSpeed;
+	}
+	
+	public int getLives()
+	{
+		return lives;
 	}
 	
 	//activates the friction force to eventually slow down the ship
@@ -238,17 +250,8 @@ public class Player extends Sprite
 	{
 		x+=vx;
 		y+=vy;
-		
-		//TODO make this better
-		if(playerNum==1 && Globals.player2.isAlive()
-				&& Globals.player2.getHit_x() < getHitWidthSum() 
-				&& x < Globals.player2.getHitWidthSum()//check the x coordinates
-				&& Globals.player2.getHit_y() < getHitHeightSum()
-				&& y < Globals.player2.getHitHeightSum())
-		{
-			Globals.player2.hit();
-			hit();
-		}
+
+		checkCollisions();
 		
 		//update bullet positions
 		updateBullets();
@@ -314,6 +317,11 @@ public class Player extends Sprite
 		updateBullets();
 	}
 	
+	public void setLives(int lifes)
+	{
+		lives = lifes; 
+	}
+	
 	public void draw(Graphics2D g)
 	{
 		BufferedImageOp ops = null;
@@ -373,5 +381,88 @@ public class Player extends Sprite
 	public boolean isAlive()
 	{
 		return (!neverAlive && alive); 
+	}
+	
+	private void checkCollisions()
+	{
+		Iterator<Asteroids> astit=Globals.asts.iterator();
+		Iterator<Smallasteroids> smastit=Globals.smasts.iterator();
+		Asteroids tmp;
+		Smallasteroids tmp2;
+		
+		//TODO make this better, right now it doesn't take into account the ships rotation
+		if(playerNum==1 && Globals.player2.isAlive()
+				&& Globals.player2.getHit_x() < getHitWidthSum() 
+				&& x < Globals.player2.getHitWidthSum()//check the x coordinates
+				&& Globals.player2.getHit_y() < getHitHeightSum()
+				&& y < Globals.player2.getHitHeightSum())
+		{
+			Globals.player2.hit();
+			hit();
+		}
+		
+		while(smastit.hasNext())
+		{
+			tmp2=smastit.next();
+			if(alive && (getHit_x() < tmp2.get_cx()//(x < cx < x+w) and (y-r < cy < y+h+r)
+					&& tmp2.get_cx() < getHitWidthSum()
+					&& getHit_y()-tmp2.getrad() < tmp2.get_cy()
+					&& tmp2.get_cy() < getHitHeightSum()+tmp2.getrad())
+					||
+					(getHit_y() < tmp2.get_cy()//(y < cy < y+h) and (x-r < cx < x+w+r)
+					&& tmp2.get_cy() < getHitHeightSum()
+					&& getHit_x() - tmp2.getrad() < tmp2.get_cx()
+					&& tmp2.get_cx() < getHitWidthSum()+tmp2.getrad()))
+			{
+				smastit.remove();
+				hit();
+			}
+		}
+		
+		//check big asteroids
+		while(astit.hasNext())
+		{
+			tmp=astit.next();
+			if(alive && (getHit_x() < tmp.get_cx()//(x < cx < x+w) and (y-r < cy < y+h+r)
+					&& tmp.get_cx() < getHitWidthSum()
+					&& getHit_y()-tmp.getrad() < tmp.get_cy()
+					&& tmp.get_cy() < getHitHeightSum()+tmp.getrad())
+					||
+					(getHit_y() < tmp.get_cy()//(y < cy < y+h) and (x-r < cx < x+w+r)
+					&& tmp.get_cy() < getHitHeightSum()
+					&& getHit_x() - tmp.getrad() < tmp.get_cx()
+					&& tmp.get_cx() < getHitWidthSum()+tmp.getrad()))
+			{
+				tmp.spawnLittles();
+				astit.remove();
+				hit();
+			}
+			
+		}
+		
+
+		//TODO FIGURE THIS OUT
+		//Check small asteroids
+		
+		
+		//Check ralien
+		if(Globals.ralien.isAlive() 
+				&& Globals.ralien.getHit_xBody() < getHitWidthSum() 
+				&& getHit_x() < Globals.ralien.getHit_xBody()+Globals.ralien.getHitWidthBody()//check the x coordinates
+				&& Globals.ralien.getHit_yBody() < getHitHeightSum()
+				&& getHit_y() < Globals.ralien.getHit_yBody()+Globals.ralien.getHitHeightBody())
+		{
+			hit();
+		}
+		
+		//Check alien
+		if(Globals.alien.isAlive() 
+				&& Globals.alien.getHit_xBody() < getHitWidthSum() 
+				&& getHit_x() < Globals.alien.getHit_xBody()+Globals.alien.getHitWidthBody()//check the x coordinates
+				&& Globals.alien.getHit_yBody() < getHitHeightSum()
+				&& getHit_y() < Globals.alien.getHit_yBody()+Globals.alien.getHitHeightBody())
+		{
+			hit();
+		}
 	}
 }

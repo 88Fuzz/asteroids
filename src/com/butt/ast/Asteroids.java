@@ -11,11 +11,6 @@ public class Asteroids extends Sprite
 {
 
 	private Random generator;
-	private int dist;
-	private double distCount;
-	private ArrayList<Bullet> bullets;
-	private int spawnCnt;
-	private int spawnTime;
 	private double cx; 
 	private double cy;
 	private double radius; 
@@ -51,7 +46,15 @@ public class Asteroids extends Sprite
 		cy = y + radius; 
 		
 	}
-		
+	
+	public double get_cx()
+	{
+		return cx;
+	}
+	public double get_cy()
+	{
+		return cy;
+	}
 	
 	public void checkEdges()
 	{
@@ -153,6 +156,13 @@ public class Asteroids extends Sprite
 	public double getrad()
 	{	
 		return radius; 
+	}
+	public void spawnLittles()
+	{
+		for (int k = 0; k < 3; k++)
+		{
+            Globals.smasts.add(new Smallasteroids(Globals.smallAst, cx, cy));
+        }
 	}
 	
 	public double getcx()

@@ -8,6 +8,8 @@ import java.awt.Window;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
+
 //initializes everything and stuff
 public class Main extends GameWindow// implements KeyListener
 {
@@ -31,6 +33,8 @@ public class Main extends GameWindow// implements KeyListener
 	private GameAction selDown;
 	private GameAction select;
 	private GameAction selUp;
+	private GameAction selLeft; 
+	private GameAction selRight; 
 	private GameAction pause;
 	private int astcount=3;
 	private int levelNum;
@@ -42,7 +46,8 @@ public class Main extends GameWindow// implements KeyListener
 		super.init();
 		Window window=device.getFullScreenWindow();
 		window.setFocusTraversalKeysEnabled(false);
-
+		
+		JOptionPane.showMessageDialog(null,"Test String" ,"High Score", 1);
 
 		inMan=new InputManager(window);
 		createSprites();
@@ -84,6 +89,8 @@ public class Main extends GameWindow// implements KeyListener
 		
 		selUp=new GameAction("up", GameAction.DETECT_INITIAL_ONLY);
 		selDown=new GameAction("down", GameAction.DETECT_INITIAL_ONLY);
+		selLeft = new GameAction("left", GameAction.DETECT_INITIAL_ONLY); 
+		selRight = new GameAction("right", GameAction.DETECT_INITIAL_ONLY);
 		select=new GameAction("select");
 		pause=new GameAction("pause", GameAction.DETECT_INITIAL_ONLY);
 		
@@ -99,6 +106,8 @@ public class Main extends GameWindow// implements KeyListener
 		
 		inMan.mapActToKey(selUp, KeyEvent.VK_UP);
 		inMan.mapActToKey(selDown, KeyEvent.VK_DOWN);
+		inMan.mapActToKey(selLeft, KeyEvent.VK_LEFT);
+		inMan.mapActToKey(selRight, KeyEvent.VK_RIGHT); 
 		inMan.mapActToKey(select, KeyEvent.VK_ENTER);
 		inMan.mapActToKey(pause, KeyEvent.VK_ESCAPE);
 	}
@@ -216,7 +225,14 @@ public class Main extends GameWindow// implements KeyListener
 		{
 			g.setColor(Color.YELLOW);
 		}
-		g.drawString("Gravity on", wOffset, hOffset);
+		if(Globals.gravity.alive)
+		{
+		g.drawString("Set gravity On", wOffset, hOffset); 
+		}
+		else
+		{
+			g.drawString("Set gravity Off", wOffset, hOffset);	
+		}
 		hOffset+=titleFont/3;
 		if(Globals.optionsNum==1)
 		{
@@ -228,7 +244,14 @@ public class Main extends GameWindow// implements KeyListener
 		{
 			g.setColor(Color.YELLOW);
 		}
-		g.drawString("Gravity Ball Visible", wOffset, hOffset);
+		if(Globals.gravity.visible)
+		{
+		g.drawString("Gravity Ball On", wOffset, hOffset); 
+		}
+		else
+		{
+		g.drawString("Gravity Ball Off", wOffset, hOffset);	
+		}
 		hOffset+=titleFont/3;
 		if(Globals.optionsNum==2)
 		{
@@ -240,7 +263,15 @@ public class Main extends GameWindow// implements KeyListener
 		{
 			g.setColor(Color.YELLOW);
 		}
-		g.drawString("Infinite lives", wOffset, hOffset);
+		
+		if (Globals.player1.getLives() < 0)
+		{
+		g.drawString("Infinite Lives On", wOffset, hOffset);	
+		}
+		else 
+		{
+		g.drawString("Infinite Lives Off", wOffset, hOffset); 
+		}
 		hOffset+=titleFont/3;
 		if(Globals.optionsNum==3)
 		{
@@ -252,7 +283,7 @@ public class Main extends GameWindow// implements KeyListener
 		{
 			g.setColor(Color.YELLOW);
 		}
-		g.drawString("Number of asteroids", wOffset, hOffset);
+		g.drawString("Number of asteroids" + "  "+ astcount, wOffset, hOffset);
 		hOffset+=titleFont/3;
 		if(Globals.optionsNum==4)
 		{
@@ -335,6 +366,30 @@ public class Main extends GameWindow// implements KeyListener
 			Globals.optionsNum=Globals.optionsNum%10;
 		}
 		
+		if(selLeft.isPressed())
+		{
+			if(Globals.optionsNum == 4)
+			{
+				Globals.asts.clear(); 
+				astcount--; 
+				System.out.println("Astcount add is " + astcount);
+				Asteroids.addast(astcount); 
+				
+			}
+		}
+		
+		if(selRight.isPressed())
+		{
+			if(Globals.optionsNum == 4)
+			{
+				Globals.asts.clear();
+				astcount++; 
+				System.out.println("Astcount sub is " + astcount);
+				Asteroids.addast(astcount);
+			 
+			}
+		}
+		
 		if(select.isPressed())
 		{
 			if(Globals.optionsNum==0)
@@ -351,6 +406,52 @@ public class Main extends GameWindow// implements KeyListener
 				inMan.mapActToKey(p2Shoot, KeyEvent.VK_CONTROL);
 				Globals.g_play=Globals.PLAY;
 			}
+			
+			else if(Globals.optionsNum==1)
+			{
+				if(Globals.gravity.alive)
+				{
+					Globals.gravity.setAlive(false);  
+					 
+				}
+				
+				else if(!Globals.gravity.alive)
+				{
+					Globals.gravity.setAlive(true);	
+				
+				}
+			}
+			
+			else if(Globals.optionsNum==2)
+			{
+				if(Globals.gravity.visible)
+				{
+					Globals.gravity.setVisible(false);  
+					 
+				}
+				
+				else if(!Globals.gravity.visible)
+				{
+					Globals.gravity.setVisible(true);	
+					 
+				}
+			}
+			
+			else if(Globals.optionsNum==3)
+			{
+				if(Globals.player1.getLives() < 0)
+				{
+					Globals.player1.setLives(3); 
+							 
+				}
+				
+				else 
+				{
+					Globals.player1.setLives(-1); 	
+					 
+				}
+			}
+			
 			else if(Globals.optionsNum==9)
 			{
 				Globals.g_play=Globals.KILL;
@@ -526,6 +627,8 @@ public class Main extends GameWindow// implements KeyListener
 		{
 			Globals.g_play=Globals.PAUSE;
 			inMan.mapActToKey(selUp, KeyEvent.VK_UP);
+			inMan.mapActToKey(selLeft, KeyEvent.VK_LEFT);
+			inMan.mapActToKey(selRight, KeyEvent.VK_RIGHT);
 		}
 
 
@@ -632,11 +735,15 @@ public class Main extends GameWindow// implements KeyListener
 		
 		if (Globals.asts.size() == 0 && Globals.smasts.size() == 0)
 		{
+			if(Globals.player1.getLives()!=0)
+				Globals.player1.increaseScore(Globals.level*100);
+			
+			if(Globals.player2.getLives()!=0)
+				Globals.player2.increaseScore(Globals.level*100);
+			
 			Globals.level = Globals.level + 1;
 			astcount++;
 			Asteroids.addast(astcount);
 		}
-
-
 	}
 }
