@@ -368,6 +368,17 @@ public class Player extends Sprite
 			neverAlive=true;
 	}
 	
+	public boolean get_neverAlive()
+	{
+		return neverAlive;
+	}
+	
+	public void unsetNeverAlive()
+	{
+		neverAlive=false;
+		alive=true;
+	}
+	
 	public void addScore(int val)
 	{
 		score+=val;
@@ -386,6 +397,11 @@ public class Player extends Sprite
 	public void setScore(int points)
 	{
 		score = points; 
+	}
+	
+	public void DelBullets()
+	{
+		bullets.clear(); 
 	}
 	
 	private void checkCollisions()

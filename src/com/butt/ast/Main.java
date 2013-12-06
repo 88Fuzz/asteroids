@@ -6,6 +6,11 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.Window;
 import java.awt.event.KeyEvent;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
@@ -37,7 +42,7 @@ public class Main extends GameWindow// implements KeyListener
 	private GameAction selRight; 
 	private GameAction pause;
 	private int astcount=3;
-	private int levelNum;
+	//private int levelNum;
 	
 	//private Alien alien;//WILL NEED TO BE CHANGED
 	
@@ -48,7 +53,8 @@ public class Main extends GameWindow// implements KeyListener
 		window.setFocusTraversalKeysEnabled(false);
 		
 		//JOptionPane.showMessageDialog(null,"Test String" ,"High Score", 1);
-
+		Globals.HighScore = new ArrayList<Integer>();
+		
 		inMan=new InputManager(window);
 		createSprites();
 		createGameActions();
@@ -399,6 +405,14 @@ public class Main extends GameWindow// implements KeyListener
 				Globals.level = Globals.level - 1; 
 				astcount = Globals.level + 1; 
 				Asteroids.addast(astcount); 
+				Globals.player1.lives = 3; 
+				Globals.player1.setScore(0);
+				
+				if (!Globals.player2.get_neverAlive())
+				{
+					Globals.player2.lives = 3; 
+					Globals.player2.setScore(0); 
+				}
 				
 			}
 		}
@@ -410,8 +424,7 @@ public class Main extends GameWindow// implements KeyListener
 				Globals.asts.clear();
 				astcount++; 
 				Asteroids.addast(astcount);
-				Globals.player1.lives = 3; 
-				Globals.player1.setScore(0); 
+				 
 			 
 			}
 			
@@ -423,6 +436,12 @@ public class Main extends GameWindow// implements KeyListener
 				Asteroids.addast(astcount); 
 				Globals.player1.lives = 3; 
 				Globals.player1.setScore(0);
+				
+				if (!Globals.player2.get_neverAlive())
+				{
+					Globals.player2.lives = 3; 
+					Globals.player2.setScore(0); 
+				}
 				
 			}
 		}
@@ -500,6 +519,7 @@ public class Main extends GameWindow// implements KeyListener
 			
 			else if(Globals.optionsNum==10)//end game
 			{
+				WriteHighScore(Globals.player1.getScore()); 
 				Globals.g_play=Globals.KILL;
 			}
 			
@@ -666,6 +686,46 @@ public class Main extends GameWindow// implements KeyListener
 
 	}
 	
+	public void AddHighScore(int score)
+	{
+		 Globals.HighScore.add(score);
+	}
+	
+	
+	public void WriteHighScore(int score)
+	{
+		//ArrayList<Integer>NumList = new ArrayList<Integer>();  
+	   
+	    //NumList.add(10); 
+		
+		try {
+			
+			File file = new File("sampletest.txt");
+ 
+			// if file doesn't exist, then create it
+			if (!file.exists()) {
+				file.createNewFile();
+			}
+ 
+			FileWriter fw = new FileWriter(file.getAbsoluteFile());
+			
+
+			Writer output = new BufferedWriter(fw);
+
+			for(int i=0; i < Globals.HighScore.size(); i++)
+			{
+			output.write(Globals.HighScore.get(i).toString()+"\n");
+			}
+			output.close();
+			
+ 
+			System.out.println("Done");
+ 
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	//checks if keys are pressed and takes the actions if keys are pressed
 	public void updateGraphicsPos(long diff)
 	{
@@ -792,9 +852,22 @@ public class Main extends GameWindow// implements KeyListener
 			Asteroids.addast(astcount);
 		}
 		
-	//	if (Globals.player1.getLives() == 0)
-	//	{
-	//		Globals.g_play = 2; 
-	//	}
+		if (Globals.player1.getLives() == 0 && Globals.player2.getLives() == 0)
+		{
+			AddHighScore(Globals.player1.getScore());
+			Globals.asts.clear(); 
+			Globals.level = 1; 
+			astcount = 3; 
+			Asteroids.addast(astcount); 
+			Globals.player1.lives = 3; 
+			Globals.player1.setScore(0);
+			Globals.player1.unsetNeverAlive();
+			Globals.player2.lives = 3; 
+			Globals.player2.setScore(0);
+			Globals.g_play = Globals.START; 
+			Globals.player2.unsetNeverAlive();
+			Globals.player1.DelBullets(); 
+			Globals.player2.DelBullets(); 
+		}
 	}
 }
