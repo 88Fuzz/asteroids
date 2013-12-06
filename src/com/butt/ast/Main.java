@@ -346,7 +346,7 @@ public class Main extends GameWindow// implements KeyListener
 		{
 			g.setColor(Color.YELLOW);
 		}
-		g.drawString("Start new level", wOffset, hOffset);
+		g.drawString("Start new level" + "  " + Globals.level, wOffset, hOffset);
 		hOffset+=titleFont/3;
 		if(Globals.optionsNum==9)
 		{
@@ -392,6 +392,15 @@ public class Main extends GameWindow// implements KeyListener
 				Asteroids.addast(astcount); 
 				
 			}
+			
+			if(Globals.optionsNum == 9)
+			{
+				Globals.asts.clear(); 
+				Globals.level = Globals.level - 1; 
+				astcount = Globals.level + 1; 
+				Asteroids.addast(astcount); 
+				
+			}
 		}
 		
 		if(selRight.isPressed())
@@ -401,7 +410,20 @@ public class Main extends GameWindow// implements KeyListener
 				Globals.asts.clear();
 				astcount++; 
 				Asteroids.addast(astcount);
+				Globals.player1.lives = 3; 
+				Globals.player1.setScore(0); 
 			 
+			}
+			
+			if(Globals.optionsNum == 9)
+			{
+				Globals.asts.clear(); 
+				Globals.level = Globals.level + 1; 
+				astcount = Globals.level + 1; 
+				Asteroids.addast(astcount); 
+				Globals.player1.lives = 3; 
+				Globals.player1.setScore(0);
+				
 			}
 		}
 		
@@ -470,6 +492,12 @@ public class Main extends GameWindow// implements KeyListener
 			{
 				Globals.wrapObjs=!Globals.wrapObjs;
 			}
+			
+			else if(Globals.optionsNum==9)
+			{
+				
+			}
+			
 			else if(Globals.optionsNum==10)//end game
 			{
 				Globals.g_play=Globals.KILL;
@@ -763,5 +791,10 @@ public class Main extends GameWindow// implements KeyListener
 			astcount++;
 			Asteroids.addast(astcount);
 		}
+		
+	//	if (Globals.player1.getLives() == 0)
+	//	{
+	//		Globals.g_play = 2; 
+	//	}
 	}
 }

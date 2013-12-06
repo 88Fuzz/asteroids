@@ -383,6 +383,11 @@ public class Player extends Sprite
 		return (!neverAlive && alive); 
 	}
 	
+	public void setScore(int points)
+	{
+		score = points; 
+	}
+	
 	private void checkCollisions()
 	{
 		Iterator<Asteroids> astit=Globals.asts.iterator();
@@ -465,4 +470,5 @@ public class Player extends Sprite
 			hit();
 		}
 	}
+	
 }
