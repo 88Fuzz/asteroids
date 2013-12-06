@@ -18,14 +18,12 @@ public class Alien extends Sprite
 	protected ArrayList<Bullet> bullets;
 	private int spawnCnt;
 	private int spawnTime;
-	protected int lives;
-	Sound hitSound;
 	
 	public Alien(String imgLoc, String bullet)
 	{
 		super(imgLoc);
 		bulletImg=bullet;
-		maxSpeed=2.75+(Globals.level*.25);
+		maxSpeed=5;
 		generator = new Random();
 		genDirFirst();
 		genDist();
@@ -34,7 +32,6 @@ public class Alien extends Sprite
 		genPos();
 		genRespawnTime();
 		alive=false;
-		lives=3;
 	}
 	
 	public Alien(String imgLoc, String bullet, int hitCode)
@@ -283,28 +280,18 @@ public class Alien extends Sprite
 	{
 		spawnCnt+=diff;
 		if(spawnCnt>spawnTime)
-		{
 			alive=true;
-			maxSpeed=2.75+(Globals.level*.25);
-		}
 		
 		updateBullets();
 	}
 	
 	public void hit()
 	{
-		lives--;
-		if(lives==0)
-		{
-			hitSound=new Sound(Globals.hitSoundStr);
-			hitSound.start();
-			alive=false;
-			genDirFirst();
-			genDist();
-			genBulletDist();
-			genPos();
-			genRespawnTime();
-			lives=3;
-		}
+		alive=false;
+		genDirFirst();
+		genDist();
+		genBulletDist();
+		genPos();
+		genRespawnTime();
 	}
 }

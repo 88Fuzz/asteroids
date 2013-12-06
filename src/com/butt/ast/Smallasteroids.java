@@ -9,11 +9,5 @@ public class Smallasteroids extends Asteroids {
 		x = initx; 
 		y = inity; 
 		
-	}
-	
-	public void hit()//probably play sound here
-	{
-		
-	}
-	
+	}	
 }

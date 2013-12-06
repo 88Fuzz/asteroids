@@ -11,10 +11,11 @@ public class Asteroids extends Sprite
 {
 
 	private Random generator;
-	private double cx; 
-	private double cy;
-	private double radius; 
-	Sound hitSound;
+	private int dist;
+	private double distCount;
+	private ArrayList<Bullet> bullets;
+	private int spawnCnt;
+	private int spawnTime;
 	
 	public Asteroids(String imgLoc)
 	{
@@ -25,10 +26,6 @@ public class Asteroids extends Sprite
 		setxy();
 		genDir(); 
 		alive=true;
-		radius = img.getWidth()/2;
-		cx = 0; 
-		cy = 0; 
-		
 	}
 	
 	public void genDir()
@@ -42,20 +39,9 @@ public class Asteroids extends Sprite
 	public void updatePos()
 	{
 		x+=vx;
-		y+=vy;
-		cx = x + radius; 
-		cy = y + radius; 
+		y+=vy;		
+	}
 		
-	}
-	
-	public double get_cx()
-	{
-		return cx;
-	}
-	public double get_cy()
-	{
-		return cy;
-	}
 	
 	public void checkEdges()
 	{
@@ -105,10 +91,10 @@ public class Asteroids extends Sprite
 		AffineTransform tx=AffineTransform.getRotateInstance(0, img.getWidth()/2, img.getHeight()/2);
 		AffineTransformOp op=new AffineTransformOp(tx,AffineTransformOp.TYPE_BILINEAR);
 		
-		g.drawImage(op.filter(img, null), ops, (int)Math.round(x), (int)Math.round(y));		
+		if(alive)
+			g.drawImage(op.filter(img, null), ops, (int)Math.round(x), (int)Math.round(y));		
 	}
 	
-	/*
 	//gets the x position of hitbox
 	public int getHit_xBody()
 	{
@@ -131,11 +117,11 @@ public class Asteroids extends Sprite
 	public int getHitHeightBody()
 	{
 		return 8;
-	}*/
+	}
 	
 	public void genPos()
 	{
-		x= generator.nextInt(Globals.HEIGHT);
+		x=Globals.WIDTH;
 		y=generator.nextInt(Globals.HEIGHT);
 	}
 	
@@ -143,45 +129,15 @@ public class Asteroids extends Sprite
 	
 	public void hit()
 	{
-		hitSound=new Sound(Globals.hitSoundStr);
-		hitSound.start();
+		alive=false;
+
+		genPos();
+
 	}
-	
 	
 	public void setxy()
 	{
 		x = generator.nextInt(Globals.WIDTH); 
 		y = generator.nextInt(Globals.HEIGHT);
-	}
-	
-	public double getrad()
-	{	
-		return radius; 
-	}
-	public void spawnLittles()
-	{
-		for (int k = 0; k < 3; k++)
-		{
-            Globals.smasts.add(new Smallasteroids(Globals.smallAst, cx, cy));
-        }
-	}
-	
-	public double getcx()
-	{
-		return cx; 
-	}
-	
-	public double getcy()
-	{
-		return cy; 
-	}
-	
-	public static void addast(int astcount)
-	{
-		Globals.asts.clear();
-		Globals.smasts.clear();
-		for (int i = 0; i < astcount; i++){
-			Globals.asts.add(new Asteroids(Globals.bigAst));
-			}
 	}
 }

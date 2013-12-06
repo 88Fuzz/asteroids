@@ -42,9 +42,11 @@ public class Player extends Sprite
 	private int score;
 	private Color scoreColor;
 	private boolean neverAlive;
-	public int lives;
+	private int lives;
 	private boolean showScore;
 	private int playerNum;
+	Sound hitSound;
+	Sound thrustSound;
 	
 	public Player(String imgLoc, String bullet, String imgLife)
 	{
@@ -102,6 +104,9 @@ public class Player extends Sprite
 	//player is accelerating
 	public void thrustOn(long diff)
 	{
+		thrustSound=new Sound(Globals.thrustSoundStr);
+		thrustSound.start();
+		
 		vx+=vVelocity*Math.sin(Math.toRadians(rotate));
 		vy+=-vVelocity*Math.cos(Math.toRadians(rotate));
 		
@@ -356,6 +361,8 @@ public class Player extends Sprite
 	
 	public void hit()
 	{
+		hitSound=new Sound(Globals.hitSoundStr);
+		hitSound.start();
 		alive=false;
 		lives--;
 		x=xSpawn;
@@ -366,17 +373,6 @@ public class Player extends Sprite
 		spawnCnt=0;
 		if(lives==0)			
 			neverAlive=true;
-	}
-	
-	public boolean get_neverAlive()
-	{
-		return neverAlive;
-	}
-	
-	public void unsetNeverAlive()
-	{
-		neverAlive=false;
-		alive=true;
 	}
 	
 	public void addScore(int val)
@@ -397,11 +393,6 @@ public class Player extends Sprite
 	public void setScore(int points)
 	{
 		score = points; 
-	}
-	
-	public void DelBullets()
-	{
-		bullets.clear(); 
 	}
 	
 	private void checkCollisions()
@@ -487,4 +478,20 @@ public class Player extends Sprite
 		}
 	}
 	
+	public boolean get_neverAlive()
+	{
+		return neverAlive;
+	}
+ 
+	public void unsetNeverAlive()
+	{
+		neverAlive=false;
+		alive=true;
+	}
+
+	public void delBullets()
+	{
+		bullets.clear(); 
+	}
+
 }

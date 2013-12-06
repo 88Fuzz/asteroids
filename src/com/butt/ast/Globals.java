@@ -18,6 +18,10 @@ public class Globals
 	public static boolean g_gravityShow=false;
 	public static int g_play=START;
 	
+	
+	public static final String hitSoundStr="sounds/explosion.wav";
+	public static final String thrustSoundStr="sounds/thrust.wav";
+	
 	public static final String p1Img="images/player1.png";
 	public static final String p2Img="images/player2.png";
 	public static final String bigAst="images/bigAsteroid.png";
@@ -41,9 +45,7 @@ public class Globals
 	public static Gravity gravity;
 	public static ArrayList<Asteroids> asts;
 	public static ArrayList<Smallasteroids>smasts;
-	
 	public static ArrayList<Integer>HighScore; 
-	
 	
 	//hit detection codes
 	public static final int HITALLBUTPLAYER1=1;

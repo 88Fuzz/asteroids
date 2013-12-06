@@ -60,8 +60,7 @@ public class Sound extends Thread
 
     public synchronized void run()
     {
-    	int bufferSize = format.getFrameSize() *
-        Math.round(format.getSampleRate() / 10);
+    	int bufferSize = format.getFrameSize()*Math.round(format.getSampleRate() / 10);
     	byte[] buffer = new byte[bufferSize];
     	SourceDataLine line;
     	int numBytes=0;

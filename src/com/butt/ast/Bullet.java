@@ -160,6 +160,7 @@ public class Bullet extends Sprite
 				d = Math.sqrt(((Globals.asts.get(i).getcx()-cx)*(Globals.asts.get(i).getcx()-cx))  + ((Globals.asts.get(i).getcy()-cy)*(Globals.asts.get(i).getcy()-cy))); 
 				if( d < (Globals.asts.get(i).getrad() + radius))
 				{
+					Globals.asts.get(i).hit();
 					Globals.asts.get(i).spawnLittles();
 					Globals.asts.remove(i);
 					return 5;	
@@ -171,6 +172,7 @@ public class Bullet extends Sprite
 				d = Math.sqrt(((Globals.smasts.get(k).getcx()-cx)*(Globals.smasts.get(k).getcx()-cx))  + ((Globals.smasts.get(k).getcy()-cy)*(Globals.smasts.get(k).getcy()-cy))); 
 				if( d < (Globals.smasts.get(k).getrad() + radius))
 				{	
+					Globals.smasts.get(k).hit();
 					Globals.smasts.remove(k);
 					return 5;	
 				}

@@ -103,6 +103,8 @@ public class HardAlien extends Alien
 	
 	public void hit()
 	{
+		hitSound=new Sound(Globals.hitSoundStr);
+		hitSound.start();
 		alive=false;
 		genDirFirst();
 		genDist();
