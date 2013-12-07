@@ -7,9 +7,16 @@ import java.awt.RenderingHints;
 import java.awt.Window;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
@@ -41,8 +48,6 @@ public class Main extends GameWindow// implements KeyListener
 	private GameAction selLeft; 
 	private GameAction selRight; 
 	private GameAction pause;
-	private int astcount=3;
-	private int levelNum;
 	
 	//private Alien alien;//WILL NEED TO BE CHANGED
 	
@@ -54,10 +59,9 @@ public class Main extends GameWindow// implements KeyListener
 		
 		//JOptionPane.showMessageDialog(null,"Test String" ,"High Score", 1);
 		Globals.HighScore = new ArrayList<HighScoreObj>();
-		
-		ReadHighScore(); 
-		
- 
+
+		ReadHighScore();
+
 		inMan=new InputManager(window);
 		createSprites();
 		createGameActions();
@@ -78,9 +82,9 @@ public class Main extends GameWindow// implements KeyListener
 		Globals.gravity = new Gravity(Globals.gravityImg);
 		//Globals.ast = new Asteroids(Globals.bigAst);
 		Globals.asts = new ArrayList<Asteroids>();
-		Globals.smasts = new ArrayList<Smallasteroids>();
+		Globals.smasts = new ArrayList<Asteroids>();
 		
-		Asteroids.addast(astcount);
+		Asteroids.addast();
 	}
 	
 	//initializes keyboard inputs for the game actions
@@ -175,7 +179,7 @@ public class Main extends GameWindow// implements KeyListener
 				update();
 				try
 				{
-					Thread.sleep(10);
+					Thread.sleep(60);
 				}
 				catch (InterruptedException ex) { }
 			}
@@ -192,7 +196,7 @@ public class Main extends GameWindow// implements KeyListener
 				update();
 				try
 				{
-					Thread.sleep(10);
+					Thread.sleep(60);
 				}
 				catch (InterruptedException ex) { }
 			}
@@ -307,62 +311,60 @@ public class Main extends GameWindow// implements KeyListener
 		{
 			g.setColor(Color.YELLOW);
 		}
-		g.drawString("Number of asteroids" + "  "+ astcount, wOffset, hOffset);
+		g.drawString("Number of asteroids" + "  "+ Globals.astcount, wOffset, hOffset);
 		hOffset+=titleFont/3;
 		if(Globals.optionsNum==5)
 		{
 			g.setColor(Color.WHITE);
 		}
 		
-		//reset high score
-		if(Globals.optionsNum==6)
-		{
-			g.setColor(Color.YELLOW);
-		}
-		g.drawString("Reset high score", wOffset, hOffset);
-		hOffset+=titleFont/3;
-		if(Globals.optionsNum==6)
-		{
-			g.setColor(Color.WHITE);
-		}
-		
-		//save
-		if(Globals.optionsNum==7)
-		{
-			g.setColor(Color.YELLOW);
-		}
-		g.drawString("Save", wOffset, hOffset);
-		hOffset+=titleFont/3;
-		if(Globals.optionsNum==7)
-		{
-			g.setColor(Color.WHITE);
-		}
-		
-		//continue from save
-		if(Globals.optionsNum==8)
-		{
-			g.setColor(Color.YELLOW);
-		}
-		g.drawString("Continue from save", wOffset, hOffset);
-		hOffset+=titleFont/3;
-		if(Globals.optionsNum==8)
-		{
-			g.setColor(Color.WHITE);
-		}
-		
 		//starting level
-		if(Globals.optionsNum==9)
+		if(Globals.optionsNum==6)
 		{
 			g.setColor(Color.YELLOW);
 		}
 		g.drawString("Start new level" + "  " + Globals.level, wOffset, hOffset);
 		hOffset+=titleFont/3;
-		if(Globals.optionsNum==9)
+		if(Globals.optionsNum==6)
 		{
 			g.setColor(Color.WHITE);
 		}
 		
-
+		//reset high score
+		if(Globals.optionsNum==7)
+		{
+			g.setColor(Color.YELLOW);
+		}
+		g.drawString("Reset high score", wOffset, hOffset);
+		hOffset+=titleFont/3;
+		if(Globals.optionsNum==7)
+		{
+			g.setColor(Color.WHITE);
+		}
+		
+		//save
+		if(Globals.optionsNum==8)
+		{
+			g.setColor(Color.YELLOW);
+		}
+		g.drawString("Save", wOffset, hOffset);
+		hOffset+=titleFont/3;
+		if(Globals.optionsNum==8)
+		{
+			g.setColor(Color.WHITE);
+		}
+		
+		//continue from save
+		if(Globals.optionsNum==9)
+		{
+			g.setColor(Color.YELLOW);
+		}
+		g.drawString("Continue from save", wOffset, hOffset);
+		hOffset+=titleFont/3;
+		if(Globals.optionsNum==9)
+		{
+			g.setColor(Color.WHITE);
+		}
 		
 		//exit
 		if(Globals.optionsNum==10)
@@ -379,6 +381,8 @@ public class Main extends GameWindow// implements KeyListener
 	
 	public void updatePauseGraphicsPos(long diff)
 	{
+		int confirm;
+		String str;
 		if(selUp.isPressed())
 		{
 			Globals.optionsNum-=1;
@@ -397,21 +401,21 @@ public class Main extends GameWindow// implements KeyListener
 			if(Globals.optionsNum == 5)
 			{
 				Globals.asts.clear(); 
-				astcount--;
-				if(astcount<1)
-					astcount=1;
-				Asteroids.addast(astcount); 
+				Globals.astcount--;
+				if(Globals.astcount<1)
+					Globals.astcount=1;
+				Asteroids.addast(); 
 				
 			}
 			
-			if(Globals.optionsNum == 9)
+			if(Globals.optionsNum == 6)
 			{
 				Globals.asts.clear(); 
 				Globals.level -= 1;
 				if(Globals.level<1)
 					Globals.level=1;
-				astcount +=1; 
-				Asteroids.addast(astcount); 
+				Globals.astcount = Globals.level + 2;
+				Asteroids.addast(); 
 				Globals.player1.setLives(3); 
 				Globals.player1.setScore(0);
 				
@@ -432,16 +436,16 @@ public class Main extends GameWindow// implements KeyListener
 			if(Globals.optionsNum == 5)
 			{
 				Globals.asts.clear();
-				astcount++; 
-				Asteroids.addast(astcount);  
+				Globals.astcount++; 
+				Asteroids.addast();  
 			}
 			
-			if(Globals.optionsNum == 9)
+			if(Globals.optionsNum == 6)
 			{
 				Globals.asts.clear(); 
-				Globals.level = Globals.level + 1; 
-				astcount = Globals.level + 1; 
-				Asteroids.addast(astcount); 
+				Globals.level += 1; 
+				Globals.astcount = Globals.level + 2; 
+				Asteroids.addast(); 
 				Globals.player1.setLives(3); 
 				Globals.player1.setScore(0);
 				
@@ -479,13 +483,10 @@ public class Main extends GameWindow// implements KeyListener
 				if(Globals.gravity.alive)
 				{
 					Globals.gravity.setAlive(false);  
-					 
 				}
-				
 				else if(!Globals.gravity.alive)
 				{
 					Globals.gravity.setAlive(true);	
-				
 				}
 			}
 			
@@ -494,13 +495,10 @@ public class Main extends GameWindow// implements KeyListener
 				if(Globals.gravity.visible)
 				{
 					Globals.gravity.setVisible(false);  
-					 
 				}
-				
 				else if(!Globals.gravity.visible)
 				{
-					Globals.gravity.setVisible(true);	
-					 
+					Globals.gravity.setVisible(true);
 				}
 			}
 			
@@ -510,7 +508,6 @@ public class Main extends GameWindow// implements KeyListener
 				{
 					Globals.player1.setLives(3);
 					Globals.player2.setLives(3);
-							 
 				}
 				else 
 				{
@@ -522,33 +519,32 @@ public class Main extends GameWindow// implements KeyListener
 			{
 				Globals.wrapObjs=!Globals.wrapObjs;
 			}
-			
-			else if(Globals.optionsNum==9)
+			else if(Globals.optionsNum==7)//reset high score
 			{
-				
+				confirm= JOptionPane.showConfirmDialog(
+					    frame,
+					    "Are you sure you want to reset the high scores?",
+					    "ANSWER THE QUESTION",
+					    JOptionPane.YES_NO_OPTION);
+				System.out.println("confirm: "+confirm);
 			}
-			
+			else if(Globals.optionsNum==8)//save
+			{
+				str=JOptionPane.showInputDialog("Enter file to save to:");
+				if(str!= null && !str.equals(""))
+					saveGame(str);
+			}
+			else if(Globals.optionsNum==9)//continue from save
+			{
+				str=JOptionPane.showInputDialog("Enter file to load from:");
+				if(str!= null && !str.equals(""))
+					loadGame(str);
+			}
 			else if(Globals.optionsNum==10)//end game
 			{
-				WriteHighScore(); 
+				WriteHighScore();
 				Globals.g_play=Globals.KILL;
 			}
-			
-			
-
-
-			
-			/*if(Globals.optionsNum==0)//one player
-			{
-				Globals.player2.setNeverAlive();
-				Globals.g_play=Globals.PLAY;
-			}
-			else//two player
-			{
-				Globals.g_play=Globals.PLAY;
-			}*/
-			
-			
 		}
 	}
 	
@@ -722,11 +718,12 @@ public class Main extends GameWindow// implements KeyListener
 			}
 		}
 		
-		for (int i = 0; i < Globals.smasts.size(); i++){
+		for (int i = 0; i < Globals.smasts.size(); i++)
+		{
             if(Globals.smasts.get(i).isAlive())
             {
-            Globals.smasts.get(i).updatePos();
-            Globals.smasts.get(i).checkEdges();
+            	Globals.smasts.get(i).updatePos();
+            	Globals.smasts.get(i).checkEdges();
             }
 		}
 
@@ -822,74 +819,66 @@ public class Main extends GameWindow// implements KeyListener
 			if(Globals.player2.getLives()!=0)
 				Globals.player2.increaseScore(Globals.level*100);
 			
-			Globals.level = Globals.level + 1;
-			astcount++;
-			Asteroids.addast(astcount);
+			Globals.level += 1;
+			Globals.astcount=Globals.level+2;
+			Asteroids.addast();
 		}
 		
 		if (Globals.player1.getLives() == 0 && Globals.player2.getLives() == 0)
 		{
-			int i = 0; 
-			if (Globals.HighScore.size() > 0)
+			int i=0;
+			if(Globals.HighScore.size>0)
 			{
-				
-				while (i < Globals.HighScore.size() && Globals.player1.getScore() < Globals.HighScore.get(i).score && i < 10)
+				while(i<Globals.HighScore.size() && 
+					Globals.player1.getScore() < Globals.HighScore.get(i).score && 
+					i<10)
 				{
-					i++; 
+					i++;
 				}
-				
-				if (i < 10 )
+
+				if(i<10)
 				{
-					AddHighScore(i,Globals.player1.getScore());
+					AddHighScore(i, Globals.player1.getScore());
 				}
-					
 			}
-			
-			else 
+			else
 			{
-				AddHighScore(i,Globals.player1.getScore());
+				AddHighScore(i, Globals.player1.getScore());
 			}
-			
-			if (!Globals.player2.get_neverAlive())
+
+			if(!Globals.player2.get_neverAlive())
 			{
-				int k = 0; 
-				if (Globals.HighScore.size() > 0)
+				i=0;
+
+				if(Globals.HighScore.size>0)
 				{
-					
-					while (k < Globals.HighScore.size() && Globals.player2.getScore() < Globals.HighScore.get(k).score && k < 10)
+					while(i<Globals.HighScore.size() && 
+						Globals.player1.getScore() < Globals.HighScore.get(i).score && 
+						i<10)
 					{
-						k++; 
+						i++;
 					}
-					
-					if (k < 10 )
+
+					if(i<10)
 					{
-						AddHighScore(k,Globals.player2.getScore());
+						AddHighScore(i, Globals.player1.getScore());
 					}
-						
 				}
-				
-				else 
+				else
 				{
-					AddHighScore(k,Globals.player2.getScore());
+					AddHighScore(i, Globals.player1.getScore());
 				}
 			}
-			
-			
-		/*	if (Globals.HighScore.size() == 0 || Globals.player1.getScore() > Globals.HighScore.get(Globals.HighScore.size()-1).score)
-			{	
-			System.out.println("Score is " + Globals.player1.getScore()); 	
+
+
+
+
+
 			AddHighScore(Globals.player1.getScore());
-			}
-			
-			if (Globals.HighScore.size() == 0 || Globals.player2.getScore() > Globals.HighScore.get(Globals.HighScore.size()-1).score)
-			{
-			AddHighScore(Globals.player2.getScore());
-			}*/
-			
 			Globals.asts.clear(); 
 			Globals.level = 1; 
-			astcount = 3; 
-			Asteroids.addast(astcount); 
+			Globals.astcount = Globals.level+2; 
+			Asteroids.addast(); 
 			
 			Globals.player1.setLives(3); 
 			Globals.player1.setScore(0);
@@ -901,7 +890,13 @@ public class Main extends GameWindow// implements KeyListener
 			Globals.player2.unsetNeverAlive();
 			Globals.player2.delBullets();
 			
-			Globals.g_play = Globals.START; 
+			Globals.g_play = Globals.START;
+			
+			
+			inMan.mapActToKey(selUp, KeyEvent.VK_UP);
+			inMan.mapActToKey(selDown, KeyEvent.VK_DOWN);
+			inMan.mapActToKey(selLeft, KeyEvent.VK_LEFT);
+			inMan.mapActToKey(selRight, KeyEvent.VK_RIGHT); 
 		}
 
 	}
@@ -913,7 +908,9 @@ public class Main extends GameWindow// implements KeyListener
 		//String str = "NastyHo";
 		Globals.HighScore.add(ind,new HighScoreObj(str,score));
 	}
-	
+
+
+
 	public void ReadHighScore()
 	{
 		BufferedReader reader; 
@@ -941,7 +938,7 @@ public class Main extends GameWindow// implements KeyListener
 		}
 	}
 
-	
+
 	public void WriteHighScore()
 	{
 		//ArrayList<Integer>NumList = new ArrayList<Integer>();  
@@ -983,5 +980,180 @@ public class Main extends GameWindow// implements KeyListener
 		} catch (IOException e){ }
 		
 		
+	}
+
+	
+	private void saveGame(String str)
+	{
+		PrintWriter writer;
+		try
+		{
+			writer = new PrintWriter(str, "UTF-8");
+			
+			//print one or two player
+			if(Globals.player2.get_neverAlive())
+				writer.println("1");
+			else
+				writer.println("2");
+			
+			writer.println(Globals.level);
+			writer.println(Globals.astcount);
+			
+			writer.println(""+Globals.player1.getLives()+" "+
+						Globals.player1.get_x()+" "+Globals.player1.get_y()+" "+
+						Globals.player1.get_vx()+" "+Globals.player1.get_vy()+" "+
+						Globals.player1.getRotate()+" "+Globals.player1.getScore());
+				
+			if(Globals.player2.get_neverAlive())
+			{
+				writer.println(""+Globals.player2.getLives()+" "+
+						Globals.player2.get_x()+" "+Globals.player2.get_y()+" "+
+						Globals.player2.get_vx()+" "+Globals.player2.get_vy()+" "+
+						Globals.player2.getRotate()+" "+Globals.player2.getScore());
+			}
+			
+			if(Globals.alien.isAlive())
+			{
+				writer.println("ALIEN");
+				writer.println(""+Globals.alien.getLives()+" "+
+						Globals.alien.get_x()+" "+Globals.alien.get_y()+" "+
+						Globals.alien.get_vx()+" "+Globals.alien.get_vy()+" "+
+						Globals.alien.getRotate());
+			}
+			
+			if(Globals.ralien.isAlive())
+			{
+				writer.println("RALIEN");
+				writer.println(""+Globals.ralien.getLives()+" "+
+						Globals.ralien.get_x()+" "+Globals.ralien.get_y()+" "+
+						Globals.ralien.get_vx()+" "+Globals.ralien.get_vy()+" "+
+						Globals.ralien.getRotate());
+			}
+			
+			
+			writer.println("BASTS");
+			for(Asteroids tmp:Globals.asts)
+				writer.println(""+tmp.get_x()+" "+tmp.get_y()+" "+
+						tmp.get_vx()+" "+tmp.get_vy()+" "+tmp.get_cx()+" "+
+						tmp.get_cy()+" "+tmp.getrad()+" "+tmp.getRotate());
+			
+			
+			writer.println("SMASTS");
+			for(Asteroids tmp:Globals.smasts)
+				writer.println(""+tmp.get_x()+" "+tmp.get_y()+" "+
+						tmp.get_vx()+" "+tmp.get_vy()+" "+tmp.get_cx()+" "+
+						tmp.get_cy()+" "+tmp.getrad()+" "+tmp.getRotate());
+			
+			
+			writer.close();
+		} catch (FileNotFoundException e) {}
+		catch (UnsupportedEncodingException e) {}
+	}
+	
+	public void loadGame(String str)
+	{
+check if SimpleScreenManager.java is needed
+		BufferedReader reader;
+		boolean twoplayer=false;
+		String line;
+		String[] arry;
+		String bloodyPISS="";
+		try
+		{
+			reader = new BufferedReader(new FileReader(str));
+			
+			//read two or one player
+			line=reader.readLine();
+			if(Integer.parseInt(line)==2)
+				twoplayer=true;
+			
+			Globals.level=Integer.parseInt(reader.readLine());
+			Globals.astcount=Integer.parseInt(reader.readLine());
+			Asteroids.addast();
+			
+			//read player1
+			line=reader.readLine();
+			arry=line.split("\\s");
+			
+			Globals.player1.startNew(Integer.parseInt(arry[0]), Double.parseDouble(arry[1]),
+					Double.parseDouble(arry[2]), Double.parseDouble(arry[3]),
+					Double.parseDouble(arry[4]), Double.parseDouble(arry[5]),
+					Integer.parseInt(arry[6]));
+			
+			if(twoplayer)//read player2
+			{
+				line=reader.readLine();
+				arry=line.split("\\s");
+				
+				Globals.player1.startNew(Integer.parseInt(arry[0]), Double.parseDouble(arry[1]),
+						Double.parseDouble(arry[2]), Double.parseDouble(arry[3]),
+						Double.parseDouble(arry[4]), Double.parseDouble(arry[5]),
+						Integer.parseInt(arry[6]));
+			}
+			
+			while ((line = reader.readLine()) != null)
+			{
+				System.out.println(line);
+				if(bloodyPISS.equals("ALIEN"))
+				{
+					arry=line.split("\\s");
+					Globals.alien.startNew(Integer.parseInt(arry[0]), Double.parseDouble(arry[1]),
+							Double.parseDouble(arry[2]), Double.parseDouble(arry[3]),
+							Double.parseDouble(arry[4]), Double.parseDouble(arry[5]));
+					bloodyPISS="";
+				}
+				else if(bloodyPISS.equals("RALIEN"))
+				{
+					arry=line.split("\\s");
+					Globals.ralien.startNew(Integer.parseInt(arry[0]), Double.parseDouble(arry[1]),
+							Double.parseDouble(arry[2]), Double.parseDouble(arry[3]),
+							Double.parseDouble(arry[4]), Double.parseDouble(arry[5]));
+					bloodyPISS="";
+				}
+				else if(bloodyPISS.equals("BASTS") && !line.equals("SMASTS"))
+				{
+					arry=line.split("\\s");
+					Globals.asts.add(new Asteroids(Globals.bigAst, 
+							Double.parseDouble(arry[0]), Double.parseDouble(arry[1]),
+							Double.parseDouble(arry[2]), Double.parseDouble(arry[3]),
+							Double.parseDouble(arry[4]), Double.parseDouble(arry[5]),
+							Double.parseDouble(arry[6]), Double.parseDouble(arry[7])));
+				}
+				else if(bloodyPISS.equals("SMASTS"))
+				{
+					arry=line.split("\\s");
+					Globals.smasts.add(new Asteroids(Globals.smallAst, 
+							Double.parseDouble(arry[0]), Double.parseDouble(arry[1]),
+							Double.parseDouble(arry[2]), Double.parseDouble(arry[3]),
+							Double.parseDouble(arry[4]), Double.parseDouble(arry[5]),
+							Double.parseDouble(arry[6]), Double.parseDouble(arry[7])));
+				}
+				
+				
+		        if(line.equals("ALIEN"))
+		        {
+		        	bloodyPISS="ALIEN";
+		        }
+		        else if(line.equals("RALIEN"))
+		        {
+		        	bloodyPISS="RALIEN";
+		        }
+		        else if(line.equals("BASTS"))
+		        {
+		        	bloodyPISS="BASTS";
+		        	Globals.asts.clear();
+		        }
+		        else if(line.equals("SMASTS"))
+		        {
+		        	bloodyPISS="SMASTS";
+		        	Globals.smasts.clear();
+		        }
+		    }
+			
+			reader.close();
+		}
+		catch (UnsupportedEncodingException e){} 
+		catch (FileNotFoundException e) {}
+		catch (IOException e) {}
 	}
 }

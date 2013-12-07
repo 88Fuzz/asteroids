@@ -359,6 +359,18 @@ public class Player extends Sprite
 		}
 	}
 	
+	public void startNew(int lives, double x, double y, double xvel,
+						double yvel, double angle, int scissor)
+	{
+		this.lives=lives;
+		this.x=x;
+		this.y=y;
+		this.vx=xvel;
+		this.vy=yvel;
+		this.rotate=angle;
+		this.score=scissor;
+	}
+	
 	public void hit()
 	{
 		hitSound=new Sound(Globals.hitSoundStr);
@@ -398,9 +410,9 @@ public class Player extends Sprite
 	private void checkCollisions()
 	{
 		Iterator<Asteroids> astit=Globals.asts.iterator();
-		Iterator<Smallasteroids> smastit=Globals.smasts.iterator();
+		Iterator<Asteroids> smastit=Globals.smasts.iterator();
 		Asteroids tmp;
-		Smallasteroids tmp2;
+		Asteroids tmp2;
 		
 		//TODO make this better, right now it doesn't take into account the ships rotation
 		if(playerNum==1 && Globals.player2.isAlive()
@@ -451,10 +463,6 @@ public class Player extends Sprite
 			}
 			
 		}
-		
-
-		//TODO FIGURE THIS OUT
-		//Check small asteroids
 		
 		
 		//Check ralien

@@ -291,6 +291,27 @@ public class Alien extends Sprite
 		updateBullets();
 	}
 	
+	public double getRotate()
+	{
+		return rotate;
+	}
+	
+	public void startNew(int lives, double x, double y, double xvel,
+			double yvel, double angle)
+	{
+		this.lives=lives;
+		this.x=x;
+		this.y=y;
+		this.vx=xvel;
+		this.vy=yvel;
+		this.rotate=angle;
+	}
+	
+	public int getLives()
+	{
+		return lives;
+	}
+	
 	public void hit()
 	{
 		lives--;

@@ -28,7 +28,27 @@ public class Asteroids extends Sprite
 		radius = img.getWidth()/2;
 		cx = 0; 
 		cy = 0; 
-		
+	}
+	
+	public Asteroids(String imgLoc, double initx, double inity)
+	{
+		this(imgLoc);
+		x=initx;
+		y=inity;
+	}
+	
+	public Asteroids(String imgLoc, double initx, double inity, double xvel, double yvel,
+			double cx, double cy, double r, double angle)
+	{
+		super(imgLoc);
+		x=initx;
+		y=inity;
+		vx=xvel;
+		vy=yvel;
+		this.cx=cx;
+		this.cy=cy;
+		radius=r;
+		rotate=angle;
 	}
 	
 	public void genDir()
@@ -37,6 +57,11 @@ public class Asteroids extends Sprite
 		
 		vx=maxSpeed*Math.sin(Math.toRadians(rotate));
 		vy=-maxSpeed*Math.cos(Math.toRadians(rotate));
+	}
+	
+	public double getRotate()
+	{
+		return rotate;
 	}
 	
 	public void updatePos()
@@ -158,11 +183,12 @@ public class Asteroids extends Sprite
 	{	
 		return radius; 
 	}
+	
 	public void spawnLittles()
 	{
 		for (int k = 0; k < 3; k++)
 		{
-            Globals.smasts.add(new Smallasteroids(Globals.smallAst, cx, cy));
+            Globals.smasts.add(new Asteroids(Globals.smallAst, cx, cy));
         }
 	}
 	
@@ -176,11 +202,11 @@ public class Asteroids extends Sprite
 		return cy; 
 	}
 	
-	public static void addast(int astcount)
+	public static void addast()
 	{
 		Globals.asts.clear();
 		Globals.smasts.clear();
-		for (int i = 0; i < astcount; i++){
+		for (int i = 0; i < Globals.astcount; i++){
 			Globals.asts.add(new Asteroids(Globals.bigAst));
 			}
 	}

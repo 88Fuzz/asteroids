@@ -37,6 +37,7 @@ public class Globals
 	public static final String p2life="images/player2life.png";
 	
 	public static int level=1;
+	public static int astcount=3;
 	
 	public static Player player1;
 	public static Player player2;
@@ -44,8 +45,8 @@ public class Globals
 	public static HardAlien ralien;
 	public static Gravity gravity;
 	public static ArrayList<Asteroids> asts;
-	public static ArrayList<Smallasteroids>smasts;
-	public static ArrayList<HighScoreObj>HighScore; 
+	public static ArrayList<Asteroids>smasts;
+	public static ArrayList<HighScoreObj>HighScore;
 	
 	//hit detection codes
 	public static final int HITALLBUTPLAYER1=1;
