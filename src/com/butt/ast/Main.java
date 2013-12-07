@@ -6,12 +6,13 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.Window;
 import java.awt.event.KeyEvent;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.Writer;
+import java.io.PrintWriter;
 import java.util.ArrayList;
+
+import javax.swing.JOptionPane;
 
 
 //initializes everything and stuff
@@ -52,8 +53,11 @@ public class Main extends GameWindow// implements KeyListener
 		window.setFocusTraversalKeysEnabled(false);
 		
 		//JOptionPane.showMessageDialog(null,"Test String" ,"High Score", 1);
-		Globals.HighScore = new ArrayList<Integer>();
-
+		Globals.HighScore = new ArrayList<HighScoreObj>();
+		
+		ReadHighScore(); 
+		
+ 
 		inMan=new InputManager(window);
 		createSprites();
 		createGameActions();
@@ -526,7 +530,7 @@ public class Main extends GameWindow// implements KeyListener
 			
 			else if(Globals.optionsNum==10)//end game
 			{
-				WriteHighScore(Globals.player1.getScore()); 
+				WriteHighScore(); 
 				Globals.g_play=Globals.KILL;
 			}
 			
@@ -825,7 +829,63 @@ public class Main extends GameWindow// implements KeyListener
 		
 		if (Globals.player1.getLives() == 0 && Globals.player2.getLives() == 0)
 		{
+			int i = 0; 
+			if (Globals.HighScore.size() > 0)
+			{
+				
+				while (i < Globals.HighScore.size() && Globals.player1.getScore() < Globals.HighScore.get(i).score && i < 10)
+				{
+					i++; 
+				}
+				
+				if (i < 10 )
+				{
+					AddHighScore(i,Globals.player1.getScore());
+				}
+					
+			}
+			
+			else 
+			{
+				AddHighScore(i,Globals.player1.getScore());
+			}
+			
+			if (!Globals.player2.get_neverAlive())
+			{
+				int k = 0; 
+				if (Globals.HighScore.size() > 0)
+				{
+					
+					while (k < Globals.HighScore.size() && Globals.player2.getScore() < Globals.HighScore.get(k).score && k < 10)
+					{
+						k++; 
+					}
+					
+					if (k < 10 )
+					{
+						AddHighScore(k,Globals.player2.getScore());
+					}
+						
+				}
+				
+				else 
+				{
+					AddHighScore(k,Globals.player2.getScore());
+				}
+			}
+			
+			
+		/*	if (Globals.HighScore.size() == 0 || Globals.player1.getScore() > Globals.HighScore.get(Globals.HighScore.size()-1).score)
+			{	
+			System.out.println("Score is " + Globals.player1.getScore()); 	
 			AddHighScore(Globals.player1.getScore());
+			}
+			
+			if (Globals.HighScore.size() == 0 || Globals.player2.getScore() > Globals.HighScore.get(Globals.HighScore.size()-1).score)
+			{
+			AddHighScore(Globals.player2.getScore());
+			}*/
+			
 			Globals.asts.clear(); 
 			Globals.level = 1; 
 			astcount = 3; 
@@ -847,19 +907,49 @@ public class Main extends GameWindow// implements KeyListener
 	}
 	
 	
-	public void AddHighScore(int score)
+	public void AddHighScore(int ind, int score)
 	{
-		Globals.HighScore.add(score);
+		String str = JOptionPane.showInputDialog("Enter Player Name: ");
+		//String str = "NastyHo";
+		Globals.HighScore.add(ind,new HighScoreObj(str,score));
 	}
 	
-	public void WriteHighScore(int score)
+	public void ReadHighScore()
+	{
+		BufferedReader reader; 
+		String[] arry; 
+		String line; 
+		int i = 0; 
+		
+		try{
+			
+			reader = new BufferedReader(new FileReader("sampletest.txt"));
+			
+			while ((line = reader.readLine()) != null)
+			{
+				arry = line.split("\\s");
+				System.out.println("yoloswag" + line); 
+				
+				Globals.HighScore.add(new HighScoreObj(arry[0],Integer.parseInt(arry[1])));  
+			}
+			
+			
+			System.out.print(Globals.HighScore.get(0).score); 
+			System.out.println(Globals.HighScore.get(0).name);
+		
+		} catch(Exception e){
+		}
+	}
+
+	
+	public void WriteHighScore()
 	{
 		//ArrayList<Integer>NumList = new ArrayList<Integer>();  
 
-		//NumList.add(10); 
+	//	Globals.HighScore.add(new HighScoreObj("NastyHo",69)); 
 
 		try {
-
+/*
 			File file = new File("sampletest.txt");
 	
 			// if file doesn't exist, then create it
@@ -874,13 +964,24 @@ public class Main extends GameWindow// implements KeyListener
 
 			for(int i=0; i < Globals.HighScore.size(); i++)
 			{
-				output.write(Globals.HighScore.get(i).toString()+"\n");
+				output.write("\n" + Globals.HighScore.get(i).score+"\n");
 			}
 			output.close();
-
-
+*/
+			
+			PrintWriter writer = new PrintWriter("sampletest.txt", "UTF-8");
+			
+			for(int i=0; i < Globals.HighScore.size(); i++)
+			{
+			writer.print(Globals.HighScore.get(i).name + "  ");
+			writer.println(Globals.HighScore.get(i).score);
+			}
+			writer.close();
+			
 			System.out.println("Done");
 	
 		} catch (IOException e){ }
+		
+		
 	}
 }

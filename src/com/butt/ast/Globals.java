@@ -45,7 +45,7 @@ public class Globals
 	public static Gravity gravity;
 	public static ArrayList<Asteroids> asts;
 	public static ArrayList<Smallasteroids>smasts;
-	public static ArrayList<Integer>HighScore; 
+	public static ArrayList<HighScoreObj>HighScore; 
 	
 	//hit detection codes
 	public static final int HITALLBUTPLAYER1=1;
