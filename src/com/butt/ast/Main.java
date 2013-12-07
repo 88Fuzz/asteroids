@@ -160,11 +160,11 @@ public class Main extends GameWindow// implements KeyListener
 				g.dispose();
 				update();
 			
-				try
-				{
-					Thread.sleep(20);
-				}
-				catch (InterruptedException ex) { }
+//				try
+//				{
+//					Thread.sleep(20);
+//				}
+//				catch (InterruptedException ex) { }
 			}
 			else if(Globals.g_play==Globals.START)//game is paused
 			{
@@ -463,6 +463,11 @@ public class Main extends GameWindow// implements KeyListener
 		
 		if(select.isPressed())
 		{
+			try
+			{
+				Thread.sleep(20);
+			}
+			catch (InterruptedException ex) { }
 			//resume
 			if(Globals.optionsNum==0)
 			{
@@ -526,7 +531,10 @@ public class Main extends GameWindow// implements KeyListener
 					    "Are you sure you want to reset the high scores?",
 					    "ANSWER THE QUESTION",
 					    JOptionPane.YES_NO_OPTION);
-				System.out.println("confirm: "+confirm);
+				if (confirm == JOptionPane.YES_OPTION)
+				{
+					
+				}
 			}
 			else if(Globals.optionsNum==8)//save
 			{
@@ -542,8 +550,16 @@ public class Main extends GameWindow// implements KeyListener
 			}
 			else if(Globals.optionsNum==10)//end game
 			{
-				WriteHighScore();
-				Globals.g_play=Globals.KILL;
+				confirm= JOptionPane.showConfirmDialog(
+					    null,
+					    "Are you sure you want to quit?",
+					    "ANSWER THE QUESTION",
+					    JOptionPane.YES_NO_OPTION);
+				if (confirm == JOptionPane.YES_OPTION)
+				{
+					WriteHighScore();
+					Globals.g_play=Globals.KILL;
+				}
 			}
 		}
 	}
@@ -826,8 +842,15 @@ public class Main extends GameWindow// implements KeyListener
 		
 		if (Globals.player1.getLives() == 0 && Globals.player2.getLives() == 0)
 		{
+			//add delay so keyboard can catch up
+			try
+			{
+				Thread.sleep(100);
+			}
+			catch (InterruptedException ex) { }
+			
 			int i=0;
-			if(Globals.HighScore.size>0)
+			if(Globals.HighScore.size()>0)
 			{
 				while(i<Globals.HighScore.size() && 
 					Globals.player1.getScore() < Globals.HighScore.get(i).score && 
@@ -850,7 +873,7 @@ public class Main extends GameWindow// implements KeyListener
 			{
 				i=0;
 
-				if(Globals.HighScore.size>0)
+				if(Globals.HighScore.size()>0)
 				{
 					while(i<Globals.HighScore.size() && 
 						Globals.player1.getScore() < Globals.HighScore.get(i).score && 
@@ -874,7 +897,6 @@ public class Main extends GameWindow// implements KeyListener
 
 
 
-			AddHighScore(Globals.player1.getScore());
 			Globals.asts.clear(); 
 			Globals.level = 1; 
 			Globals.astcount = Globals.level+2; 
@@ -1004,7 +1026,7 @@ public class Main extends GameWindow// implements KeyListener
 						Globals.player1.get_vx()+" "+Globals.player1.get_vy()+" "+
 						Globals.player1.getRotate()+" "+Globals.player1.getScore());
 				
-			if(Globals.player2.get_neverAlive())
+			if(!Globals.player2.get_neverAlive())
 			{
 				writer.println(""+Globals.player2.getLives()+" "+
 						Globals.player2.get_x()+" "+Globals.player2.get_y()+" "+
@@ -1052,7 +1074,7 @@ public class Main extends GameWindow// implements KeyListener
 	
 	public void loadGame(String str)
 	{
-check if SimpleScreenManager.java is needed
+//check if SimpleScreenManager.java is needed
 		BufferedReader reader;
 		boolean twoplayer=false;
 		String line;
@@ -1085,7 +1107,7 @@ check if SimpleScreenManager.java is needed
 				line=reader.readLine();
 				arry=line.split("\\s");
 				
-				Globals.player1.startNew(Integer.parseInt(arry[0]), Double.parseDouble(arry[1]),
+				Globals.player2.startNew(Integer.parseInt(arry[0]), Double.parseDouble(arry[1]),
 						Double.parseDouble(arry[2]), Double.parseDouble(arry[3]),
 						Double.parseDouble(arry[4]), Double.parseDouble(arry[5]),
 						Integer.parseInt(arry[6]));
@@ -1093,7 +1115,6 @@ check if SimpleScreenManager.java is needed
 			
 			while ((line = reader.readLine()) != null)
 			{
-				System.out.println(line);
 				if(bloodyPISS.equals("ALIEN"))
 				{
 					arry=line.split("\\s");

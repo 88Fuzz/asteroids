@@ -94,6 +94,24 @@ public class Player extends Sprite
 		playerNum=player;
 	}
 	
+	public Player(String imgLoc, String bullet, double xpos, double ypos, 
+			int hitCode, int scoreLoc, Color scoreColor,
+			String imgLife, int player, int lives, double x, double y, double xvel,
+			double yvel, double angle, int scissor)
+	{
+			this(imgLoc, bullet, x, y, hitCode, scoreLoc, scoreColor, imgLife, player);
+			this.lives=lives;
+			this.x=x;
+			this.y=y;
+			this.vx=xvel;
+			this.vy=yvel;
+			this.rotate=angle;
+			this.score=scissor;
+			unsetNeverAlive();
+			if(lives==0)
+				this.alive=false;
+	}
+	
 	public void setNeverAlive()
 	{
 		neverAlive=true;
@@ -359,9 +377,10 @@ public class Player extends Sprite
 		}
 	}
 	
-	public void startNew(int lives, double x, double y, double xvel,
+	public synchronized void startNew(int lives, double x, double y, double xvel,
 						double yvel, double angle, int scissor)
 	{
+		bullets.clear();
 		this.lives=lives;
 		this.x=x;
 		this.y=y;
@@ -369,6 +388,11 @@ public class Player extends Sprite
 		this.vy=yvel;
 		this.rotate=angle;
 		this.score=scissor;
+		unsetNeverAlive();
+		if(lives==0)
+			this.alive=false;
+		/*this.neverAlive=false;
+		this.showScore=true;*/
 	}
 	
 	public void hit()
@@ -495,6 +519,7 @@ public class Player extends Sprite
 	{
 		neverAlive=false;
 		alive=true;
+		showScore=true;
 	}
 
 	public void delBullets()
