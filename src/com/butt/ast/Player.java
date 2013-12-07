@@ -408,7 +408,7 @@ public class Player extends Sprite
 		vy=0;
 		spawnCnt=0;
 		if(lives==0)			
-			neverAlive=true;
+			alive=false;//neverAlive=true;
 	}
 	
 	public void addScore(int val)
